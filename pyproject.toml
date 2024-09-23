@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "filmmaker-rf-ate"
+version = "0.1.0"
+description = "ATE app for Filmaker 2 RF tests"
+authors = ["jsim-rode <jordan.sim@rode.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "0.2.1"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "anydev-gitlab"
+url = "https://gitlab.anydev.au/api/v4/projects/1/packages/pypi/simple"
+priority = "explicit"
