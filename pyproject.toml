@@ -5,9 +5,16 @@ description = "ATE app for Filmaker 2 RF tests"
 authors = ["jsim-rode <jordan.sim@rode.com>"]
 readme = "README.md"
 
+[tool.poetry.group.lint]
+optional = true
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.6.7"
+
 [tool.poetry.dependencies]
 python = "^3.12"
 functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "0.2.1"}
+pyserial = "^3.5"
 
 
 [build-system]
@@ -18,3 +25,4 @@ build-backend = "poetry.core.masonry.api"
 name = "anydev-gitlab"
 url = "https://gitlab.anydev.au/api/v4/projects/1/packages/pypi/simple"
 priority = "explicit"
+
