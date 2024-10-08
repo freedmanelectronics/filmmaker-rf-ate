@@ -35,10 +35,11 @@ class ConnectionStatsTest(DeviceTest):
         self._threshold = threshold
 
         if self._gender == "tx":
-            self._dut_rfid_idx = 1
-            self._ref_rfid_idx = 1
+            self._dut_rfid_idx = 1  # Pairs to RX
+            self._ref_rfid_idx = 1  # Pairs to TX1
         elif self._gender == "rx":
-            raise NotImplementedError
+            self._dut_rfid_idx = 1  # Pairs to TX1
+            self._ref_rfid_idx = 1  # Pairs to RX
         else:
             raise ValueError(
                 f"Unexpected gender `{self._gender}`, expected `rx` or `tx`"
@@ -60,9 +61,7 @@ class ConnectionStatsTest(DeviceTest):
     def test_routine(self) -> list[FailureMode]:
         ret = []
 
-        dut_rfid = self._dut.rode_device.handle_command(
-            RadioCommands.radio_get_rfid(0)
-        )
+        dut_rfid = self._dut.rode_device.handle_command(RadioCommands.radio_get_rfid(0))
         ref_rfid = self._reference.rode_device.handle_command(
             RadioCommands.radio_get_rfid(0)
         )
@@ -140,33 +139,21 @@ class ConnectionStatsTest(DeviceTest):
 
     def post_test_routine(self) -> None:
         # Reset RFID
-        if self._gender == "tx":
-            self._dut.rode_device.handle_command(
-                RadioCommands.radio_set_rfid(self._dut_rfid_idx, bytes(0x0))
-            )
-            print(
-                self._dut.rode_device.handle_command(
-                    RadioCommands.radio_get_rfid(self._dut_rfid_idx)
-                )
-            )
-            rfid = self._dut.rode_device.handle_command(
-                RadioCommands.radio_get_rfid(self._dut_rfid_idx)
-            )
-            assert rfid == bytes(
-                [0, 0, 0, 0]
-            ), f"Failed to reset DUT's paired RFID to zero."
-        elif self._gender == "rx":
-            raise NotImplementedError
-        else:
-            raise ValueError(
-                f"Unexpected gender `{self._gender}`, expected `rx` or `tx`"
-            )
+        self._dut.rode_device.handle_command(
+            RadioCommands.radio_set_rfid(self._dut_rfid_idx, bytes(0x0))
+        )
+        rfid = self._dut.rode_device.handle_command(
+            RadioCommands.radio_get_rfid(self._dut_rfid_idx)
+        )
+        assert rfid == bytes([0, 0, 0, 0]), "Failed to reset DUT's paired RFID to zero."
 
 
 if __name__ == "__main__":
-    ref, rxs = get_devices()
+    from filmmaker_rf_ate.config import CONFIG
 
-    test = ConnectionStatsTest(rxs[0], ref, "tx")
+    ref, duts = get_devices()
+
+    test = ConnectionStatsTest(duts[0], ref, CONFIG.dut_type)
     result = test.execute_test()
 
     print(result)

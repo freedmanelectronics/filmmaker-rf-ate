@@ -1,5 +1,5 @@
 from functional_test_core.utils import get_connected_devices
-from filmmaker_rf_ate.config import REFERENCE_DEVICE_CLASS, RX_CLASS
+from filmmaker_rf_ate.config import CONFIG
 
 
 def get_devices():
@@ -12,8 +12,12 @@ def get_devices():
     references = [
         device
         for device in devices
-        if isinstance(device.rode_device, REFERENCE_DEVICE_CLASS)
+        if isinstance(device.rode_device, CONFIG.device_classes.ref)
     ]
-    rxs = [device for device in devices if isinstance(device.rode_device, RX_CLASS)]
+    duts = [
+        device
+        for device in devices
+        if isinstance(device.rode_device, CONFIG.device_classes.dut)
+    ]
 
-    return references[0], rxs
+    return references[0], duts
