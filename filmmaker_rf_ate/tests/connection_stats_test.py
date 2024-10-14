@@ -7,8 +7,6 @@ from functional_test_core.models import DeviceInfo, FailureMode
 from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.wireless.commands.radio_commands import RadioCommands
 
-from filmmaker_rf_ate.utils import get_devices
-
 
 @dataclass
 class ConnectionStatsThreshold:
@@ -150,10 +148,11 @@ class ConnectionStatsTest(DeviceTest):
 
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
+    from filmmaker_rf_ate.get_devices import get_devices
 
-    ref, duts = get_devices()
+    ref, dut1, _, _, _ = get_devices(CONFIG.device_classes.dut, CONFIG.device_classes.ref)
 
-    test = ConnectionStatsTest(duts[0], ref, CONFIG.dut_type)
+    test = ConnectionStatsTest(dut1, ref, CONFIG.dut_type)
     result = test.execute_test()
 
     print(result)

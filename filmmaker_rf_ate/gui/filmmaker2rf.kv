@@ -1,0 +1,87 @@
+#:kivy 1.10.1
+
+<RootLayout>:
+    id: root_layout_id
+    orientation: 'vertical'
+    dut_size_hint_y: (self.width / 4) / self.height
+
+    BoxLayout:
+        id: buttons_layout
+        orientation: 'horizontal'
+        size_hint: (1, (1 - root.dut_size_hint_y) * 0.5)
+
+        FloatLayout:
+            Button:
+                id: scan_button
+                text: "Scan only"
+                font_size: 30
+                size_hint: 0.8, 0.8
+                pos_hint: {'x': 0.1, 'y': 0.1}
+                disabled: False
+                on_press: root.scan()
+
+        FloatLayout:
+            Button:
+                id: test_button
+                text: "Scan and Test"
+                font_size: 30
+                size_hint: 0.8, 0.8
+                pos_hint: {'x': 0.1, 'y': 0.1}
+                disabled: False
+                on_press: root.start_test()
+
+    Label:
+        id: log_label
+        size_hint: (1, (1 - root.dut_size_hint_y) * 0.5)
+        text: 'poopoo'
+
+    DUTLayout:
+        size_hint: (1, root.dut_size_hint_y)
+        id: dut_layout
+
+
+<DUTLayout>
+    orientation: 'horizontal'
+    dut_widgets: [board1, board2, board3, board4]
+
+    DUTWidget:
+        id: board1
+        board_name: 'DUT1'
+
+    DUTWidget:
+        id: board2
+        board_name: 'DUT2'
+
+    DUTWidget:
+        id: board3
+        board_name: 'DUT3'
+
+    DUTWidget:
+        id: board4
+        board_name: 'DUT4'
+
+<DUTWidget>:
+    orientation: 'vertical'
+    board_name: self.board_name
+
+    FloatLayout:
+        Label:
+            id: board_pic
+            size_hint: 0.8, 0.8
+            pos_hint: {'x': 0.1, 'y': 0.1}
+            text: root.board_name
+            font_size: 30
+            bold: True
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+            outline_width: 5
+            outline_color: (82/255),(85/255),(89/255)
+
+            canvas.before:
+                Color:
+                    rgba: root.color
+                BorderImage:
+                    source:	'./graphics/wproRx.png'
+                    pos: self.pos
+                    size: self.size

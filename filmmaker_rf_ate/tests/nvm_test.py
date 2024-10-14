@@ -14,7 +14,7 @@ class NvmTest(DeviceTest):
         self._wireless = wireless
 
         if gender == "rx":
-            self._nvm_address = 0xc
+            self._nvm_address = 0xC
             self._exp_nvm_values = bytes([0x00, 0x00, 0x04, 0x01])
         elif gender == "tx":
             self._nvm_address = 0x08
@@ -25,7 +25,9 @@ class NvmTest(DeviceTest):
             )
 
     def test_routine(self) -> list[FailureMode]:
-        nvm = self._wireless.rode_device.handle_command(NVMReadCommand(self._nvm_address, 4))
+        nvm = self._wireless.rode_device.handle_command(
+            NVMReadCommand(self._nvm_address, 4)
+        )
 
         passed = nvm == self._exp_nvm_values
         info = {"read": nvm, "expected": self._exp_nvm_values}
