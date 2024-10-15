@@ -11,7 +11,7 @@ class BatteryTest(DeviceTest):
         self,
         wireless: DeviceInfo,
     ):
-        super().__init__("battery", [wireless])
+        super().__init__("battery", [wireless], error_code='B')
         self._wireless = wireless
         self._initial_timestamp = datetime.now()
         self._initial_battery_info = self._wireless.rode_device.handle_command(

@@ -19,7 +19,7 @@ class ConnectionStatsTest(DeviceTest):
         min_rssi: int = -95,
         allowed_errors: int = 1000,
     ):
-        super().__init__("connection_stats", [wireless])
+        super().__init__("connection_stats", [wireless], error_code='C')
         self._dut = wireless
         self._reference = reference
         self._gender = gender

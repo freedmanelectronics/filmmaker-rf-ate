@@ -30,10 +30,13 @@
                 disabled: False
                 on_press: root.start_test()
 
-    Label:
-        id: log_label
+    AnchorLayout:
         size_hint: (1, (1 - root.dut_size_hint_y) * 0.5)
-        text: 'poopoo'
+        Label:
+            id: log_label
+            size_hint: (0.8, 0.8)
+            text: 'poopoo'
+            size: self.texture_size
 
     DUTLayout:
         size_hint: (1, root.dut_size_hint_y)

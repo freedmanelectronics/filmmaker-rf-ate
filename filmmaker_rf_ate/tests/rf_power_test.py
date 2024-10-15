@@ -28,7 +28,7 @@ class RFPowerTest(DeviceTest):
         channels: list[RadioChannel] = None,
         antennae_min_delta: list[AntennaConfig] = None,
     ):
-        super().__init__("connection_stats", [wireless])
+        super().__init__("connection_stats", [wireless], error_code='R')
         self._dut = wireless
         self._com_port = com_port
         self._channels = (
@@ -167,18 +167,41 @@ class RFPowerTest(DeviceTest):
                 RadioChannel.CHANNEL_0, RadioAntennaIndex.ANTENNA_2
             )
         )
+        self.notify_observers(
+            Message(
+                "running",
+                self.name,
+                "Resetting DUT...",
+            )
+        )
+
         self._dut.rode_device.handle_command(CommonCommands.reset())
 
         # Confirm device rebooted
         exc = None
+
         for i in range(15):
             try:
                 self._dut.rode_device.handle_command(CommonCommands.app_version())
+                self.notify_observers(
+                    Message(
+                        "running",
+                        self.name,
+                        "Resetting complete!",
+                    )
+                )
                 return
             except OSError as e:
                 exc = e
                 time.sleep(0.5)
 
+        self.notify_observers(
+            Message(
+                "fail",
+                self.name,
+                "Resetting failed!",
+            )
+        )
         raise exc if exc else DeviceTestTeardownException()
 
 
