@@ -89,7 +89,7 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Testing power high on antennae {antenna_config.antenna} @ channel {channel}",
+                            f"Testing power high on antennae {antenna_config.antenna} @ {channel.name}",
                         )
                     )
                     self._dut.rode_device.handle_command(
@@ -112,7 +112,7 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Testing power low on antennae {antenna_config.antenna} @ channel {channel}",
+                            f"Testing power low on antennae {antenna_config.antenna} @ {channel.name}",
                         )
                     )
                     self._dut.rode_device.handle_command(

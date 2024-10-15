@@ -61,6 +61,7 @@ class RootLayout(BoxLayout):
         self.ids.log_label.text = "Scanning for devices..."
         for widget in self.ids.dut_layout.dut_widgets:
             widget.disabled = True
+            widget.error_code = ''
 
         try:
             ref, *duts = get_devices(self._test_config.device_classes.dut, self._test_config.device_classes.ref, retries=5)
@@ -91,7 +92,7 @@ class RootLayout(BoxLayout):
                 return
 
             observer = DutWidgetObserver(duts[0], log_label=self.ids.log_label)
-
+            failed = []
             for dut, widget in zip(duts, self.ids.dut_layout.dut_widgets):
                 if dut is None:
                     continue
@@ -100,7 +101,18 @@ class RootLayout(BoxLayout):
 
                 test_handler = test_factory(ref, dut, self._test_config)
                 test_handler.add_observer(observer)
-                test_handler.execute_tests()
+                results = test_handler.execute_tests()
+
+                if any([not result.passed for result in results]):
+                    failed.append(dut)
+
+                widget.error_code = "".join([result.error_code for result in results if not result.passed])
+
+            if failed:
+                failed_dut_str = ', '.join([device.name_short for device in failed])
+                self.ids.log_label.text = f'Test(s) failed! Reject [{failed_dut_str}].'
+            else:
+                self.ids.log_label.text = 'Tests passed!'
 
         threading.Thread(target=_start_test_callback).start()
 
@@ -118,11 +130,14 @@ class DUTLayout(BoxLayout):
 # Individual board status layout
 class DUTWidget(BoxLayout):
     board_name = StringProperty("DUT")
+    error_code = StringProperty("")
+    label_text = StringProperty("")
     color = ListProperty([1, 1, 1, 0.3])
     disabled_color = [1, 1, 1, 0.3]
     enabled_color = [1, 1, 1, 1]
 
     def __init__(self, **kwargs):
+        self.label_text = f'{self.board_name}\n{self.error_code}' if self.error_code else self.board_name
         super().__init__(**kwargs)
         self.disabled = True
 
@@ -140,3 +155,21 @@ class DUTWidget(BoxLayout):
 
     def set_color_fail(self):
         self.color = hex_to_kivy(ERROR)
+
+    def set_board_label(self):
+        if self.error_code:
+            self.label_text = f'{self.board_name}\n{self.error_code}'
+        else:
+            self.label_text = self.board_name
+
+    def update_label(self):
+        if self.error_code:
+            self.label_text = f'{self.board_name}\n{self.error_code}'
+        else:
+            self.label_text = self.board_name
+
+    def on_board_name(self, instance, value):
+        self.update_label()
+
+    def on_error_code(self, instance, value):
+        self.update_label()

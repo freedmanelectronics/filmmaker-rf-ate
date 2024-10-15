@@ -65,14 +65,13 @@
 
 <DUTWidget>:
     orientation: 'vertical'
-    board_name: self.board_name
 
     FloatLayout:
         Label:
             id: board_pic
             size_hint: 0.8, 0.8
             pos_hint: {'x': 0.1, 'y': 0.1}
-            text: root.board_name
+            text: root.label_text
             font_size: 30
             bold: True
             text_size: self.size
