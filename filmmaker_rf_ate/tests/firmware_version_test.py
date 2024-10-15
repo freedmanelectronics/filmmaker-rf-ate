@@ -1,6 +1,6 @@
 # Tests firmware version
 from functional_test_core.device_test import DeviceTest
-from functional_test_core.models import DeviceInfo, FailureMode
+from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.common.commands.basic_commands import CommonCommands
 from rode.devices.utils.versions import Version
@@ -18,7 +18,7 @@ class FirmwareVersionTest(DeviceTest):
         self._min_firmware_version = min_firmware_version
         self._min_nordic_verison = min_nordic_version
 
-    def test_routine(self) -> list[FailureMode]:
+    def test_routine(self) -> list[TestInfo]:
         ret = []
 
         firmware_version = self._wireless.rode_device.handle_command(
@@ -29,14 +29,14 @@ class FirmwareVersionTest(DeviceTest):
             "found": str(firmware_version),
             "minimum": str(self._min_firmware_version),
         }
-        ret.append(FailureMode("firmware_version", passed, info=info))
+        ret.append(TestInfo("firmware_version", passed, info=info))
 
         nordic_version = self._wireless.rode_device.handle_command(
             AppCommands.radio_version()
         )
         passed = nordic_version >= self._min_nordic_verison
         info = {"found": str(nordic_version), "minimum": str(self._min_nordic_verison)}
-        ret.append(FailureMode("nordic_version", passed, info=info))
+        ret.append(TestInfo("nordic_version", passed, info=info))
 
         return ret
 

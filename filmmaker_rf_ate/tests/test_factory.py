@@ -6,6 +6,7 @@ from functional_test_core.mock import (
     MockDeviceTestRetries,
 )
 from functional_test_core.models import DeviceInfo
+from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
 from filmmaker_rf_ate.config import Config
 
@@ -30,5 +31,10 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
 
 
 class FilmmakerTestHandler(TestHandler):
-    def __init__(self):
+    def __init__(self, config: Config, dut: WirelessDeviceBase, ref: WirelessDeviceBase):
         super().__init__(stop_on_fail=True, short_msg=True)
+        self._config = config
+        self._ref = ref
+        self._dut = dut
+
+        self.tests = []

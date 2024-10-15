@@ -3,7 +3,7 @@ from statistics import mean
 from functional_test_core.device_test import DeviceTest
 from functional_test_core.device_test.device_test import DeviceTestTeardownException
 from functional_test_core.device_test.observer import Message
-from functional_test_core.models import DeviceInfo, FailureMode
+from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.wireless.commands.radio_commands import (
     RadioCommands,
@@ -70,7 +70,7 @@ class RFPowerTest(DeviceTest):
             else TestSetupException("Could not power on device, retries exceeded")
         )
 
-    def test_routine(self) -> list[FailureMode]:
+    def test_routine(self) -> list[TestInfo]:
         ret = []
 
         with RFATEArduino(self._com_port) as ard:
@@ -147,7 +147,7 @@ class RFPowerTest(DeviceTest):
                     "mean_delta_power": avg_pow,
                 }
                 ret.append(
-                    FailureMode(
+                    TestInfo(
                         f"{antenna_config.antenna.name}_avg_power", passed, info=info
                     )
                 )

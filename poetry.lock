@@ -173,7 +173,7 @@ files = [
 
 [[package]]
 name = "functional-test-core"
-version = "0.2.0"
+version = "0.3.0"
 description = "Core python library for functional tests"
 optional = false
 python-versions = "^3.10"
@@ -183,15 +183,15 @@ develop = false
 [package.dependencies]
 colorama = "^0.4.6"
 rode-core = "^0.3.1"
-rode-devices = ">0.6.1"
+rode-devices = "^7.0.0"
 sqlalchemy = "^2.0.31"
 sqlalchemy-json = "^0.7.0"
 
 [package.source]
 type = "git"
 url = "git@github.com:freedmanelectronics/functional-test-core.git"
-reference = "0.2.1"
-resolved_reference = "79eb7a45047bf759f7c13dc9af7d732b26fb576d"
+reference = "0.3.0"
+resolved_reference = "57419043e3b299dd230d83ca7faed673d364d987"
 
 [[package]]
 name = "greenlet"
@@ -912,4 +912,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "798a5592815bfc55a04b725f95e55cde1a8b0cf38d17f8258bf4f067437bd210"
+content-hash = "9eb55c92db25e63a63b3448d3b31c045d9cea9076d55ed0027515c967233f073"

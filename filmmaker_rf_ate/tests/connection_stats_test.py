@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from functional_test_core.device_test import DeviceTest
-from functional_test_core.models import DeviceInfo, FailureMode
+from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.wireless.commands.radio_commands import RadioCommands
 
@@ -52,7 +52,7 @@ class ConnectionStatsTest(DeviceTest):
             AppCommands.system_is_on()
         ), "Reference could not be powered on"
 
-    def test_routine(self) -> list[FailureMode]:
+    def test_routine(self) -> list[TestInfo]:
         ret = []
 
         dut_rfid = self._dut.rode_device.handle_command(RadioCommands.radio_get_rfid(0))
@@ -75,14 +75,14 @@ class ConnectionStatsTest(DeviceTest):
         )
         wireless_passed = dut_pair_rfid == ref_rfid
         info = {"found_rfid": dut_pair_rfid, "expected_rfid": ref_rfid}
-        ret.append(FailureMode("dut_paired", wireless_passed, info=info))
+        ret.append(TestInfo("dut_paired", wireless_passed, info=info))
 
         ref_pair_rfid = self._reference.rode_device.handle_command(
             RadioCommands.radio_get_rfid(self._ref_rfid_idx)
         )
         ref_passed = ref_pair_rfid == dut_rfid
         info = {"found_rfid": ref_pair_rfid, "expected_rfid": dut_rfid}
-        ret.append(FailureMode("ref_paired", ref_passed, info=info))
+        ret.append(TestInfo("ref_paired", ref_passed, info=info))
 
         if not (wireless_passed and ref_passed):
             return ret
@@ -92,7 +92,7 @@ class ConnectionStatsTest(DeviceTest):
         )
 
         conn_stats_retrieved = conn_stats is not None
-        ret.append(FailureMode("connection_stats_short_measured", conn_stats_retrieved))
+        ret.append(TestInfo("connection_stats_short_measured", conn_stats_retrieved))
 
         if not conn_stats_retrieved:
             return ret
@@ -102,14 +102,14 @@ class ConnectionStatsTest(DeviceTest):
             "measured_average": conn_stats.ch1_stats.avg_rssi,
             "limits": {"min": self._min_rssi},
         }
-        ret.append(FailureMode("min_rssi", rssi_passed, info=info))
+        ret.append(TestInfo("min_rssi", rssi_passed, info=info))
 
         conn_stats = self._dut.rode_device.handle_command(
             RadioCommands.radio_get_advanced_connection_stats(0, self._duration_long)
         )
 
         conn_stats_retrieved = conn_stats is not None
-        ret.append(FailureMode("connection_stats_long_measured", conn_stats_retrieved))
+        ret.append(TestInfo("connection_stats_long_measured", conn_stats_retrieved))
 
         ch1_total_errors = (
             conn_stats.ch1_stats.audio_missed_errors
@@ -118,7 +118,7 @@ class ConnectionStatsTest(DeviceTest):
         )
         passed = ch1_total_errors < self._allowed_errors
         info = {"total": ch1_total_errors, "allowed": self._allowed_errors}
-        ret.append(FailureMode("ch1_total_errors", passed, info=info))
+        ret.append(TestInfo("ch1_total_errors", passed, info=info))
 
         ch2_total_errors = (
             conn_stats.ch1_stats.audio_missed_errors
@@ -127,7 +127,7 @@ class ConnectionStatsTest(DeviceTest):
         )
         passed = ch2_total_errors < self._allowed_errors
         info = {"total": ch2_total_errors, "allowed": self._allowed_errors}
-        ret.append(FailureMode("ch2_total_errors", passed, info=info))
+        ret.append(TestInfo("ch2_total_errors", passed, info=info))
 
         return ret
 

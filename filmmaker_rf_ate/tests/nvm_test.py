@@ -2,7 +2,7 @@
 from typing import Literal
 
 from functional_test_core.device_test import DeviceTest
-from functional_test_core.models import DeviceInfo, FailureMode
+from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.nvm_commands import NVMReadCommand
 
 
@@ -13,7 +13,7 @@ class NvmTest(DeviceTest):
         self._nvm_address = address
         self._exp_nvm_values = expected_values
 
-    def test_routine(self) -> list[FailureMode]:
+    def test_routine(self) -> list[TestInfo]:
         nvm = self._wireless.rode_device.handle_command(
             NVMReadCommand(self._nvm_address, len(self._exp_nvm_values))
         )
@@ -21,7 +21,7 @@ class NvmTest(DeviceTest):
         passed = nvm == self._exp_nvm_values
         info = {"read": nvm, "expected": self._exp_nvm_values}
 
-        return [FailureMode("nvm_value", passed, info=info)]
+        return [TestInfo("nvm_value", passed, info=info)]
 
 
 if __name__ == "__main__":
