@@ -1,6 +1,4 @@
 # Tests non volatile memory
-from typing import Literal
-
 from functional_test_core.device_test import DeviceTest
 from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.nvm_commands import NVMReadCommand

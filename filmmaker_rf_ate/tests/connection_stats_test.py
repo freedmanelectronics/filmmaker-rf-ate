@@ -150,7 +150,15 @@ if __name__ == "__main__":
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
     )
 
-    test = ConnectionStatsTest(dut1, ref, CONFIG.gender)
+    test = ConnectionStatsTest(
+        dut1,
+        ref,
+        CONFIG.gender,
+        CONFIG.tests.connection_stats.duration_short,
+        CONFIG.tests.connection_stats.duration_long,
+        CONFIG.tests.connection_stats.min_rssi,
+        CONFIG.tests.connection_stats.allowed_errors,
+    )
     result = test.execute_test()
 
     print(result)

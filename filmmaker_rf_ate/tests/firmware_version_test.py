@@ -49,7 +49,11 @@ if __name__ == "__main__":
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
     )
 
-    test = FirmwareVersionTest(dut, Version("0.1.2"), Version("0.2.5"))
+    test = FirmwareVersionTest(
+        dut,
+        CONFIG.tests.firmware.min_mcu_version,
+        CONFIG.tests.firmware.min_nordic_version,
+    )
     result = test.execute_test()
 
     print(result)

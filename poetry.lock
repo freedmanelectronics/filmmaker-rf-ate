@@ -178,7 +178,7 @@ description = "Core python library for functional tests"
 optional = false
 python-versions = "^3.10"
 files = []
-develop = false
+develop = true
 
 [package.dependencies]
 colorama = "^0.4.6"
@@ -188,10 +188,8 @@ sqlalchemy = "^2.0.31"
 sqlalchemy-json = "^0.7.0"
 
 [package.source]
-type = "git"
-url = "git@github.com:freedmanelectronics/functional-test-core.git"
-reference = "0.3.0"
-resolved_reference = "57419043e3b299dd230d83ca7faed673d364d987"
+type = "directory"
+url = "../functional-test-core"
 
 [[package]]
 name = "greenlet"
@@ -912,4 +910,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "9eb55c92db25e63a63b3448d3b31c045d9cea9076d55ed0027515c967233f073"
+content-hash = "27b181e7f98435ac8db16bfb0f981ce030c564272681e8e7a226e75c0eddb8a5"
