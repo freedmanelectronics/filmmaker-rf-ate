@@ -5,28 +5,17 @@ from functional_test_core.device_test import DeviceTest
 from functional_test_core.models import DeviceInfo, FailureMode
 from rode.devices.wireless.commands.nvm_commands import NVMReadCommand
 
-from filmmaker_rf_ate.utils import get_devices
-
 
 class NvmTest(DeviceTest):
-    def __init__(self, wireless: DeviceInfo, gender: Literal["rx", "tx"]):
+    def __init__(self, wireless: DeviceInfo, address: int, expected_values: bytes):
         super().__init__("nvm_test", [wireless])
         self._wireless = wireless
-
-        if gender == "rx":
-            self._nvm_address = 0xC
-            self._exp_nvm_values = bytes([0x00, 0x00, 0x04, 0x01])
-        elif gender == "tx":
-            self._nvm_address = 0x08
-            self._exp_nvm_values = bytes([0x00, 0x04, 0x01, 0x00])
-        else:
-            raise ValueError(
-                f"Unexpected gender value `{gender}` - expected `rx` or `tx`"
-            )
+        self._nvm_address = address
+        self._exp_nvm_values = expected_values
 
     def test_routine(self) -> list[FailureMode]:
         nvm = self._wireless.rode_device.handle_command(
-            NVMReadCommand(self._nvm_address, 4)
+            NVMReadCommand(self._nvm_address, len(self._exp_nvm_values))
         )
 
         passed = nvm == self._exp_nvm_values
@@ -37,10 +26,13 @@ class NvmTest(DeviceTest):
 
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
+    from filmmaker_rf_ate.get_devices import get_devices
 
-    reference, duts = get_devices()
+    reference, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    )
 
-    test = NvmTest(duts[0], CONFIG.dut_type)
+    test = NvmTest(dut, CONFIG.tests.nvm.address, CONFIG.tests.nvm.expected_values)
     result = test.execute_test()
 
     print(result)

@@ -10,19 +10,7 @@ from functional_test_core.models import DeviceInfo
 from filmmaker_rf_ate.config import Config
 
 
-def test_factory(
-    ref: DeviceInfo, dut: DeviceInfo
-) -> TestHandler:
-    """
-    Factory method for generating tests
-
-    @param gui_observer: gui observer object
-    @param product_family: product family
-    @param charge_case_type: type of charge case
-    @param mock:
-    @param config:
-    @return:
-    """
+def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
     th = TestHandler(stop_on_fail=False, short_msg=True)
 
     kwargs = {
@@ -39,3 +27,8 @@ def test_factory(
     ]
 
     return th
+
+
+class FilmmakerTestHandler(TestHandler):
+    def __init__(self):
+        super().__init__(stop_on_fail=True, short_msg=True)

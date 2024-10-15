@@ -8,12 +8,6 @@ from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.wireless.commands.radio_commands import RadioCommands
 
 
-@dataclass
-class ConnectionStatsThreshold:
-    min_rssi: int = -95
-    allowed_errors: int = 1000
-
-
 class ConnectionStatsTest(DeviceTest):
     def __init__(
         self,
@@ -22,7 +16,8 @@ class ConnectionStatsTest(DeviceTest):
         gender: Literal["rx", "tx"],
         duration_short: int = 120,
         duration_long: int = 500,
-        threshold: ConnectionStatsThreshold = ConnectionStatsThreshold(),
+        min_rssi: int = -95,
+        allowed_errors: int = 1000,
     ):
         super().__init__("connection_stats", [wireless])
         self._dut = wireless
@@ -30,7 +25,8 @@ class ConnectionStatsTest(DeviceTest):
         self._gender = gender
         self._duration_short = duration_short
         self._duration_long = duration_long
-        self._threshold = threshold
+        self._min_rssi = min_rssi
+        self._allowed_errors = allowed_errors
 
         if self._gender == "tx":
             self._dut_rfid_idx = 1  # Pairs to RX
@@ -101,10 +97,10 @@ class ConnectionStatsTest(DeviceTest):
         if not conn_stats_retrieved:
             return ret
 
-        rssi_passed = conn_stats.ch1_stats.avg_rssi >= self._threshold.min_rssi
+        rssi_passed = conn_stats.ch1_stats.avg_rssi >= self._min_rssi
         info = {
             "measured_average": conn_stats.ch1_stats.avg_rssi,
-            "limits": {"min": self._threshold.min_rssi},
+            "limits": {"min": self._min_rssi},
         }
         ret.append(FailureMode("min_rssi", rssi_passed, info=info))
 
@@ -120,8 +116,8 @@ class ConnectionStatsTest(DeviceTest):
             + conn_stats.ch1_stats.audio_crc_errors
             + conn_stats.ch1_stats.beacon_errors
         )
-        passed = ch1_total_errors < self._threshold.allowed_errors
-        info = {"total": ch1_total_errors, "allowed": self._threshold.allowed_errors}
+        passed = ch1_total_errors < self._allowed_errors
+        info = {"total": ch1_total_errors, "allowed": self._allowed_errors}
         ret.append(FailureMode("ch1_total_errors", passed, info=info))
 
         ch2_total_errors = (
@@ -129,8 +125,8 @@ class ConnectionStatsTest(DeviceTest):
             + conn_stats.ch1_stats.audio_crc_errors
             + conn_stats.ch1_stats.beacon_errors
         )
-        passed = ch2_total_errors < self._threshold.allowed_errors
-        info = {"total": ch2_total_errors, "allowed": self._threshold.allowed_errors}
+        passed = ch2_total_errors < self._allowed_errors
+        info = {"total": ch2_total_errors, "allowed": self._allowed_errors}
         ret.append(FailureMode("ch2_total_errors", passed, info=info))
 
         return ret
@@ -150,9 +146,11 @@ if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.get_devices import get_devices
 
-    ref, dut1, _, _, _ = get_devices(CONFIG.device_classes.dut, CONFIG.device_classes.ref)
+    ref, dut1, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    )
 
-    test = ConnectionStatsTest(dut1, ref, CONFIG.dut_type)
+    test = ConnectionStatsTest(dut1, ref, CONFIG.gender)
     result = test.execute_test()
 
     print(result)

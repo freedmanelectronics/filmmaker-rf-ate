@@ -13,7 +13,7 @@ from rode.devices.wireless.commands.radio_channels import RadioChannel
 from rode.devices.common.commands.basic_commands import CommonCommands
 
 from filmmaker_rf_ate.arduino.arduino import RFATEArduino
-from filmmaker_rf_ate.utils import get_devices
+from filmmaker_rf_ate.config import AntennaConfig
 
 
 class TestSetupException(Exception):
@@ -21,14 +21,12 @@ class TestSetupException(Exception):
 
 
 class RFPowerTest(DeviceTest):
-    _antennae = [RadioAntennaIndex.ANTENNA_1, RadioAntennaIndex.ANTENNA_2]
-
     def __init__(
         self,
         wireless: DeviceInfo,
         com_port: str,
         channels: list[RadioChannel] = None,
-        antennae_min_delta: dict[RadioAntennaIndex, float] = None,
+        antennae_min_delta: list[AntennaConfig] = None,
     ):
         super().__init__("connection_stats", [wireless])
         self._dut = wireless
@@ -45,7 +43,10 @@ class RFPowerTest(DeviceTest):
             else channels
         )
         self._antennae_min_delta = (
-            {RadioAntennaIndex.ANTENNA_1: 5.0, RadioAntennaIndex.ANTENNA_2: 5.0}
+            [
+                AntennaConfig(RadioAntennaIndex.ANTENNA_1, 5.0),
+                AntennaConfig(RadioAntennaIndex.ANTENNA_2, 5.0),
+            ]
             if not antennae_min_delta
             else antennae_min_delta
         )
@@ -76,7 +77,7 @@ class RFPowerTest(DeviceTest):
             ard.set_mode("M")
 
             info = {}
-            for antenna, min_delta in self._antennae_min_delta.items():
+            for antenna_config in self._antennae_min_delta:
                 high_power_results = []
                 low_power_results = []
                 delta_power_results = []
@@ -88,12 +89,12 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Testing power high on antennae {antenna} @ channel {channel}",
+                            f"Testing power high on antennae {antenna_config.antenna} @ channel {channel}",
                         )
                     )
                     self._dut.rode_device.handle_command(
                         RadioCommands.radio_start_continuous_wave_test_mode_fixedfreq(
-                            channel, antenna, 0x04
+                            channel, antenna_config.antenna, 0x04
                         )
                     )
                     pow_high = ard.get_radio_power()
@@ -102,7 +103,7 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Antenna {antenna} power high measured at {pow_high} dBm",
+                            f"Antenna {antenna_config.antenna} power high measured at {pow_high} dBm",
                         )
                     )
                     time.sleep(0.3)  # very important delay, has to be 0.3s , not 1.0s
@@ -111,12 +112,12 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Testing power low on antennae {antenna} @ channel {channel}",
+                            f"Testing power low on antennae {antenna_config.antenna} @ channel {channel}",
                         )
                     )
                     self._dut.rode_device.handle_command(
                         RadioCommands.radio_start_continuous_wave_test_mode_fixedfreq(
-                            channel, antenna, 0xEC
+                            channel, antenna_config.antenna, 0xEC
                         )
                     )
                     pow_low = ard.get_radio_power()
@@ -129,7 +130,7 @@ class RFPowerTest(DeviceTest):
                         Message(
                             "running",
                             self.name,
-                            f"Antenna {antenna} power delta measured at {delta_pow} dBm",
+                            f"Antenna {antenna_config.antenna} power delta measured at {delta_pow} dBm",
                         )
                     )
                     antenna_info[channel.name] = {
@@ -139,13 +140,17 @@ class RFPowerTest(DeviceTest):
                     }
 
                 avg_pow = mean(delta_power_results)
-                passed = avg_pow > min_delta
+                passed = avg_pow > antenna_config.min_delta
                 info = {
                     "channels": antenna_info,
-                    "limits": {"delta_power": {"min": min_delta}},
+                    "limits": {"delta_power": {"min": antenna_config.min_delta}},
                     "mean_delta_power": avg_pow,
                 }
-                ret.append(FailureMode(f"{antenna.name}_avg_power", passed, info=info))
+                ret.append(
+                    FailureMode(
+                        f"{antenna_config.antenna.name}_avg_power", passed, info=info
+                    )
+                )
 
             ard.set_mode("P")
 
@@ -178,9 +183,19 @@ class RFPowerTest(DeviceTest):
 
 
 if __name__ == "__main__":
-    ref, duts = get_devices()
+    from filmmaker_rf_ate.get_devices import get_devices
+    from filmmaker_rf_ate.config import CONFIG
 
-    test = RFPowerTest(duts[0], "COM4")
+    ref, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    )
+
+    test = RFPowerTest(
+        dut,
+        CONFIG.arduino_com_port,
+        CONFIG.tests.rf_power.channels,
+        CONFIG.tests.rf_power.antennae,
+    )
     result = test.execute_test()
 
     print(result)

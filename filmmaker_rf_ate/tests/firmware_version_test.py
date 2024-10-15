@@ -5,8 +5,6 @@ from rode.devices.wireless.commands.app_commands import AppCommands
 from rode.devices.common.commands.basic_commands import CommonCommands
 from rode.devices.utils.versions import Version
 
-from filmmaker_rf_ate.utils import get_devices
-
 
 class FirmwareVersionTest(DeviceTest):
     def __init__(
@@ -44,9 +42,14 @@ class FirmwareVersionTest(DeviceTest):
 
 
 if __name__ == "__main__":
-    reference, duts = get_devices()
+    from filmmaker_rf_ate.config import CONFIG
+    from filmmaker_rf_ate.get_devices import get_devices
 
-    test = FirmwareVersionTest(duts[0], Version("0.1.2"), Version("0.2.5"))
+    reference, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    )
+
+    test = FirmwareVersionTest(dut, Version("0.1.2"), Version("0.2.5"))
     result = test.execute_test()
 
     print(result)

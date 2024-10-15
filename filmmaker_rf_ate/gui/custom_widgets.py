@@ -1,14 +1,109 @@
+import threading
+
+from functional_test_core.device_test.observer import Observer, Observable, Message
+from functional_test_core.models import DeviceInfo
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ListProperty
+from kivy.uix.label import Label
+from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
+
 from filmmaker_rf_ate.gui.graphics.colours import hex_to_kivy, PRIMARY, SUCCESS, ERROR
+from filmmaker_rf_ate.get_devices import get_devices
+from filmmaker_rf_ate.tests.test_factory import mock_test_factory
+
+
+class DutWidgetObserver(Observer):
+    def __init__(self, dut_widget: "DUTWidget", log_label: Label):
+        super().__init__()
+        self._dut_widget = dut_widget
+        self._log_label = log_label
+
+    @property
+    def dut_widget(self) -> "DUTWidget":
+        return self._dut_widget
+
+    @dut_widget.setter
+    def dut_widget(self, value: "DUTWidget"):
+        self._dut_widget = value
+
+    def update(self, observable: Observable, message: Message, *args, **kwargs):
+        self._log_label.text = message.content
+
+        if message.status == "running":
+            self._dut_widget.set_color_running()
+        elif message.status == "pass":
+            self._dut_widget.set_color_pass()
+        elif message.status == "fail":
+            self._dut_widget.set_color_fail()
 
 
 class RootLayout(BoxLayout):
-    def scan(self):
-        self.ids.dut_layout.dut_widgets[0].set_color_fail()
+    def __init__(
+        self,
+        ref_class: type(WirelessDeviceBase),
+        dut_class: type(WirelessDeviceBase),
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.ref: DeviceInfo | None = None
+        self._ref_class = ref_class
+        self._dut_class = dut_class
+        self.duts: list[DeviceInfo | None] = [None, None, None, None]
+
+    def _scan_devices(
+        self,
+    ) -> tuple[
+        DeviceInfo | None,
+        DeviceInfo | None,
+        DeviceInfo | None,
+        DeviceInfo | None,
+        DeviceInfo | None,
+    ]:
+        self.ids.log_label.text = "Scanning for devices..."
+        for widget in self.ids.dut_layout.dut_widgets:
+            widget.disabled = True
+
+        try:
+            ref, *duts = get_devices(self._dut_class, self._ref_class, retries=5)
+        except AssertionError:
+            self.ids.log_label.text = "Reference unit not found! Check connection."
+            return None, None, None, None, None
+
+        self.ids.log_label.text = (
+            f"{len([dut for dut in duts if dut is not None])} device(s) found!"
+        )
+
+        for dut, widget in zip(duts, self.ids.dut_layout.dut_widgets):
+            if dut is not None:
+                widget.disabled = False
+            else:
+                widget.disabled = True
+
+        return ref, *duts
+
+    def scan_button_callback(self):
+        threading.Thread(target=self._scan_devices).start()
 
     def start_test(self):
-        self.ids.dut_layout.dut_widgets[0].set_color_pass()
+        def _start_test_callback():
+            ref, *duts = self._scan_devices()
+
+            if not ref:
+                return
+
+            observer = DutWidgetObserver(duts[0], log_label=self.ids.log_label)
+
+            for dut, widget in zip(duts, self.ids.dut_layout.dut_widgets):
+                if dut is None:
+                    continue
+
+                observer.dut_widget = widget
+
+                test_handler = mock_test_factory(ref, dut)
+                test_handler.add_observer(observer)
+                test_handler.execute_tests()
+
+        threading.Thread(target=_start_test_callback).start()
 
 
 class DUTLayout(BoxLayout):
