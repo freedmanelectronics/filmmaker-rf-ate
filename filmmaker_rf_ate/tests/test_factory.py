@@ -11,6 +11,7 @@ from functional_test_core.models import DeviceInfo
 from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
 from filmmaker_rf_ate.config import Config
+from filmmaker_rf_ate.tests.battery_test import BatteryTest
 from filmmaker_rf_ate.tests.connection_stats_test import ConnectionStatsTest
 from filmmaker_rf_ate.tests.firmware_version_test import FirmwareVersionTest
 from filmmaker_rf_ate.tests.nvm_test import NvmTest
@@ -32,6 +33,41 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
         MockDeviceTestRaises([ref, dut]),
         MockDeviceTestTimerExecution([ref, dut], **kwargs),
     ]
+
+    return th
+
+
+def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandler:
+    tests = [
+            FirmwareVersionTest(
+                dut,
+                config.tests.firmware.min_mcu_version,
+                config.tests.firmware.min_nordic_version,
+            ),
+            NvmTest(
+                dut,
+                config.tests.nvm.address,
+                config.tests.nvm.expected_values,
+            ),
+            ConnectionStatsTest(
+                dut,
+                ref,
+                config.gender,
+                config.tests.connection_stats.duration_short,
+                config.tests.connection_stats.duration_long,
+                config.tests.connection_stats.min_rssi,
+                config.tests.connection_stats.allowed_errors,
+            ),
+            RFPowerTest(
+                dut,
+                config.arduino_com_port,
+                config.tests.rf_power.channels,
+                config.tests.rf_power.antennae,
+            ),
+            BatteryTest(dut)
+        ]
+
+    th = TestHandler(short_msg=True, tests=tests)
 
     return th
 

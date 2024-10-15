@@ -46,7 +46,7 @@ if __name__ == "__main__":
     )
 
     initial_time = datetime.now() - timedelta(hours=1)
-    test = BatteryTest(dut, 80, initial_time)
+    test = BatteryTest(dut)
     results = test.execute_test()
 
     print(results)

@@ -7,9 +7,10 @@ from kivy.properties import StringProperty, ListProperty
 from kivy.uix.label import Label
 from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
+from filmmaker_rf_ate.config import Config
 from filmmaker_rf_ate.gui.graphics.colours import hex_to_kivy, PRIMARY, SUCCESS, ERROR
 from filmmaker_rf_ate.get_devices import get_devices
-from filmmaker_rf_ate.tests.test_factory import mock_test_factory
+from filmmaker_rf_ate.tests.test_factory import mock_test_factory, test_factory
 
 
 class DutWidgetObserver(Observer):
@@ -40,14 +41,12 @@ class DutWidgetObserver(Observer):
 class RootLayout(BoxLayout):
     def __init__(
         self,
-        ref_class: type(WirelessDeviceBase),
-        dut_class: type(WirelessDeviceBase),
+        config: Config,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.ref: DeviceInfo | None = None
-        self._ref_class = ref_class
-        self._dut_class = dut_class
+        self._test_config = config
         self.duts: list[DeviceInfo | None] = [None, None, None, None]
 
     def _scan_devices(
@@ -64,7 +63,7 @@ class RootLayout(BoxLayout):
             widget.disabled = True
 
         try:
-            ref, *duts = get_devices(self._dut_class, self._ref_class, retries=5)
+            ref, *duts = get_devices(self._test_config.device_classes.dut, self._test_config.device_classes.ref, retries=5)
         except AssertionError:
             self.ids.log_label.text = "Reference unit not found! Check connection."
             return None, None, None, None, None
@@ -99,7 +98,7 @@ class RootLayout(BoxLayout):
 
                 observer.dut_widget = widget
 
-                test_handler = mock_test_factory(ref, dut)
+                test_handler = test_factory(ref, dut, self._test_config)
                 test_handler.add_observer(observer)
                 test_handler.execute_tests()
 
