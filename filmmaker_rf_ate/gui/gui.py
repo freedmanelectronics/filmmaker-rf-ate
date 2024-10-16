@@ -1,5 +1,4 @@
 from kivy.app import App
-from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 from filmmaker_rf_ate.config import Config
 
 from filmmaker_rf_ate.gui.custom_widgets import RootLayout

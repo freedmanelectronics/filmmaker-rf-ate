@@ -28,7 +28,7 @@ class BatteryTest(DeviceTest):
         )
         info = {
             "initial_percentage": self._initial_battery_info.battery_soc,
-            "time_since_measurement": time_since_measurement.total_seconds(),
+            "seconds_since_measurement": time_since_measurement.total_seconds(),
             "percentage": battery_info.battery_soc,
             "voltage": battery_info.battery_voltage,
             "temperature": battery_info.battery_temp,

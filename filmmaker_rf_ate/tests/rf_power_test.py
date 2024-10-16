@@ -13,7 +13,7 @@ from rode.devices.wireless.commands.radio_channels import RadioChannel
 from rode.devices.common.commands.basic_commands import CommonCommands
 
 from filmmaker_rf_ate.arduino.arduino import RFATEArduino
-from filmmaker_rf_ate.config import AntennaConfig
+from filmmaker_rf_ate.config.tests import AntennaConfig
 
 
 class TestSetupException(Exception):
