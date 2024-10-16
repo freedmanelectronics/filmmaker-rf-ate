@@ -3,6 +3,7 @@ name = "filmmaker-rf-ate"
 version = "0.1.0"
 description = "ATE app for Filmaker 2 RF tests"
 authors = ["jsim-rode <jordan.sim@rode.com>"]
+license = "GPL"
 readme = "README.md"
 
 [tool.poetry.group.lint]
@@ -17,6 +18,7 @@ functional-test-core = {git = "git@github.com:freedmanelectronics/functional-tes
 pyserial = "^3.5"
 kivy = "^2.3.0"
 pyaml = "^24.9.0"
+rfid-server = {git = "git@github.com:freedmanelectronics/RFID_Server.git", rev = "poetry"}
 
 
 [build-system]

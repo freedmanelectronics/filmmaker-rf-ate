@@ -1,6 +1,5 @@
 import logging
 import platform
-import time
 
 from functional_test_core.models import DeviceInfo
 from functional_test_core.utils import get_connected_devices

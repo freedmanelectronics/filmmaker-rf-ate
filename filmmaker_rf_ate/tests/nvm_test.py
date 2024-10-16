@@ -24,7 +24,7 @@ class NvmTest(DeviceTest):
 
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
-    from filmmaker_rf_ate.get_devices import get_devices
+    from filmmaker_rf_ate.utils.get_devices import get_devices
 
     reference, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref

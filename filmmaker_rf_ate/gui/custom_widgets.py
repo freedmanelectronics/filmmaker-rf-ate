@@ -5,12 +5,11 @@ from functional_test_core.models import DeviceInfo
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ListProperty
 from kivy.uix.label import Label
-from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
 from filmmaker_rf_ate.config import Config
 from filmmaker_rf_ate.gui.graphics.colours import hex_to_kivy, PRIMARY, SUCCESS, ERROR
-from filmmaker_rf_ate.get_devices import get_devices
-from filmmaker_rf_ate.tests.test_factory import mock_test_factory, test_factory
+from filmmaker_rf_ate.utils.get_devices import get_devices
+from filmmaker_rf_ate.tests.test_factory import test_factory
 
 
 class DutWidgetObserver(Observer):

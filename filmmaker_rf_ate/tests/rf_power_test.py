@@ -206,7 +206,7 @@ class RFPowerTest(DeviceTest):
 
 
 if __name__ == "__main__":
-    from filmmaker_rf_ate.get_devices import get_devices
+    from filmmaker_rf_ate.utils.get_devices import get_devices
     from filmmaker_rf_ate.config import CONFIG
 
     ref, dut, _, _, _ = get_devices(
