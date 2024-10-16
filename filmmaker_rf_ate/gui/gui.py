@@ -8,9 +8,7 @@ from filmmaker_rf_ate.gui.custom_widgets import RootLayout
 class Filmmaker2RFApp(App):
     # Build
     # --------
-    def __init__(
-        self, config: Config
-    ):
+    def __init__(self, config: Config):
         self._test_config = config
         super().__init__()
 

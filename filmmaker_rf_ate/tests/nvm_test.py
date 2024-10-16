@@ -6,7 +6,7 @@ from rode.devices.wireless.commands.nvm_commands import NVMReadCommand
 
 class NvmTest(DeviceTest):
     def __init__(self, wireless: DeviceInfo, address: int, expected_values: bytes):
-        super().__init__("nvm_test", [wireless], error_code='N')
+        super().__init__("nvm_test", [wireless], error_code="N")
         self._wireless = wireless
         self._nvm_address = address
         self._exp_nvm_values = expected_values

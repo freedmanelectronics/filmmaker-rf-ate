@@ -13,7 +13,7 @@ class FirmwareVersionTest(DeviceTest):
         min_firmware_version: Version,
         min_nordic_version: Version,
     ):
-        super().__init__("firmware_version", [wireless], error_code='F')
+        super().__init__("firmware_version", [wireless], error_code="F")
         self._wireless = wireless
         self._min_firmware_version = min_firmware_version
         self._min_nordic_verison = min_nordic_version

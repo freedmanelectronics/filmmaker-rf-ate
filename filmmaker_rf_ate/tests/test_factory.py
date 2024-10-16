@@ -39,33 +39,33 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
 
 def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandler:
     tests = [
-            FirmwareVersionTest(
-                dut,
-                config.tests.firmware.min_mcu_version,
-                config.tests.firmware.min_nordic_version,
-            ),
-            NvmTest(
-                dut,
-                config.tests.nvm.address,
-                config.tests.nvm.expected_values,
-            ),
-            ConnectionStatsTest(
-                dut,
-                ref,
-                config.gender,
-                config.tests.connection_stats.duration_short,
-                config.tests.connection_stats.duration_long,
-                config.tests.connection_stats.min_rssi,
-                config.tests.connection_stats.allowed_errors,
-            ),
-            RFPowerTest(
-                dut,
-                config.arduino_com_port,
-                config.tests.rf_power.channels,
-                config.tests.rf_power.antennae,
-            ),
-            BatteryTest(dut)
-        ]
+        FirmwareVersionTest(
+            dut,
+            config.tests.firmware.min_mcu_version,
+            config.tests.firmware.min_nordic_version,
+        ),
+        NvmTest(
+            dut,
+            config.tests.nvm.address,
+            config.tests.nvm.expected_values,
+        ),
+        ConnectionStatsTest(
+            dut,
+            ref,
+            config.gender,
+            config.tests.connection_stats.duration_short,
+            config.tests.connection_stats.duration_long,
+            config.tests.connection_stats.min_rssi,
+            config.tests.connection_stats.allowed_errors,
+        ),
+        RFPowerTest(
+            dut,
+            config.arduino_com_port,
+            config.tests.rf_power.channels,
+            config.tests.rf_power.antennae,
+        ),
+        BatteryTest(dut),
+    ]
 
     th = TestHandler(verbose=False, tests=tests)
 

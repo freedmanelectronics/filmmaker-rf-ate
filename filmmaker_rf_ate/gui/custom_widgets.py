@@ -61,10 +61,14 @@ class RootLayout(BoxLayout):
         self.ids.log_label.text = "Scanning for devices..."
         for widget in self.ids.dut_layout.dut_widgets:
             widget.disabled = True
-            widget.error_code = ''
+            widget.error_code = ""
 
         try:
-            ref, *duts = get_devices(self._test_config.device_classes.dut, self._test_config.device_classes.ref, retries=5)
+            ref, *duts = get_devices(
+                self._test_config.device_classes.dut,
+                self._test_config.device_classes.ref,
+                retries=5,
+            )
         except AssertionError:
             self.ids.log_label.text = "Reference unit not found! Check connection."
             return None, None, None, None, None
@@ -106,13 +110,15 @@ class RootLayout(BoxLayout):
                 if any([not result.passed for result in results]):
                     failed.append(dut)
 
-                widget.error_code = "".join([result.error_code for result in results if not result.passed])
+                widget.error_code = "".join(
+                    [result.error_code for result in results if not result.passed]
+                )
 
             if failed:
-                failed_dut_str = ', '.join([device.name_short for device in failed])
-                self.ids.log_label.text = f'Test(s) failed! Reject [{failed_dut_str}].'
+                failed_dut_str = ", ".join([device.name_short for device in failed])
+                self.ids.log_label.text = f"Test(s) failed! Reject [{failed_dut_str}]."
             else:
-                self.ids.log_label.text = 'Tests passed!'
+                self.ids.log_label.text = "Tests passed!"
 
         threading.Thread(target=_start_test_callback).start()
 
@@ -137,7 +143,11 @@ class DUTWidget(BoxLayout):
     enabled_color = [1, 1, 1, 1]
 
     def __init__(self, **kwargs):
-        self.label_text = f'{self.board_name}\n{self.error_code}' if self.error_code else self.board_name
+        self.label_text = (
+            f"{self.board_name}\n{self.error_code}"
+            if self.error_code
+            else self.board_name
+        )
         super().__init__(**kwargs)
         self.disabled = True
 
@@ -158,13 +168,13 @@ class DUTWidget(BoxLayout):
 
     def set_board_label(self):
         if self.error_code:
-            self.label_text = f'{self.board_name}\n{self.error_code}'
+            self.label_text = f"{self.board_name}\n{self.error_code}"
         else:
             self.label_text = self.board_name
 
     def update_label(self):
         if self.error_code:
-            self.label_text = f'{self.board_name}\n{self.error_code}'
+            self.label_text = f"{self.board_name}\n{self.error_code}"
         else:
             self.label_text = self.board_name
 
