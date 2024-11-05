@@ -8,8 +8,13 @@ from rode.devices.wireless.commands.radio_commands import RadioSetRfId, RadioGet
 
 
 class RfidAssignmentTest(DeviceTest):
-    def __init__(self, wireless: DeviceInfo, rfid_client: Client, expected_first_byte_value: int = 8):
-        super().__init__("nvm_test", [wireless], error_code="N")
+    def __init__(
+        self,
+        wireless: DeviceInfo,
+        rfid_client: Client,
+        expected_first_byte_value: int = 8,
+    ):
+        super().__init__("nvm_test", wireless, error_code="N")
         self._wireless = wireless
         self._rfid_client = rfid_client
         self._comment = "filmmaker_rf_ate"
@@ -18,10 +23,10 @@ class RfidAssignmentTest(DeviceTest):
     def test_routine(self) -> list[TestInfo]:
         device_rfid = self._wireless.rode_device.handle_command(RadioGetRfId(0))
 
-        if device_rfid == b'\xff\xff\xff\xff': # RFID has not been assigned
+        if device_rfid == b"\xff\xff\xff\xff":  # RFID has not been assigned
             rfid_from_server = self._rfid_client.next(
-                self._wireless.product_family.name,
-                self._wireless.product_family.product_id,
+                self._wireless.family.name,
+                self._wireless.family.product_id,
                 comment=self._comment,
             )
             rfid_bytes = bytes.fromhex(rfid_from_server[2:])
@@ -43,10 +48,9 @@ class RfidAssignmentTest(DeviceTest):
             ret = TestInfo("rfid_assigned", passed, info=info)
         else:
             # Check that first byte == 8
-            passed = device_rfid[0] & 0xf0 == 0x080
+            passed = device_rfid[0] & 0xF0 == 0x080
             info = {"device_rfid": device_rfid}
-            ret = TestInfo('rfid_valid', passed, info=info
-                           )
+            ret = TestInfo("rfid_valid", passed, info=info)
         if passed:
             self.notify_observers(
                 Message(
@@ -70,6 +74,7 @@ class RfidAssignmentTest(DeviceTest):
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
 
     reference, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
@@ -84,4 +89,4 @@ if __name__ == "__main__":
     test = RfidAssignmentTest(dut, client)
     result = test.execute_test()
 
-    print(result)
+    print(spprint_devices(dut))

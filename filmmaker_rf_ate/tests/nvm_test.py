@@ -6,7 +6,7 @@ from rode.devices.wireless.commands.nvm_commands import NVMReadCommand
 
 class NvmTest(DeviceTest):
     def __init__(self, wireless: DeviceInfo, address: int, expected_values: bytes):
-        super().__init__("nvm_test", [wireless], error_code="N")
+        super().__init__("nvm_test", wireless, error_code="N")
         self._wireless = wireless
         self._nvm_address = address
         self._exp_nvm_values = expected_values
@@ -25,6 +25,7 @@ class NvmTest(DeviceTest):
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
 
     reference, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
@@ -33,4 +34,4 @@ if __name__ == "__main__":
     test = NvmTest(dut, CONFIG.tests.nvm.address, CONFIG.tests.nvm.expected_values)
     result = test.execute_test()
 
-    print(result)
+    print(spprint_devices(dut))

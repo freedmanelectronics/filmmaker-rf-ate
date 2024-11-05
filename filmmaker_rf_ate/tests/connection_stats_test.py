@@ -18,7 +18,7 @@ class ConnectionStatsTest(DeviceTest):
         min_rssi: int = -95,
         allowed_errors: int = 1000,
     ):
-        super().__init__("connection_stats", [wireless], error_code="C")
+        super().__init__("connection_stats", wireless, error_code="C")
         self._dut = wireless
         self._reference = reference
         self._gender = gender
@@ -144,6 +144,7 @@ class ConnectionStatsTest(DeviceTest):
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
 
     ref, dut1, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
@@ -160,7 +161,4 @@ if __name__ == "__main__":
     )
     result = test.execute_test()
 
-    print(result)
-
-    for fm in result.failure_modes:
-        print(fm)
+    print(spprint_devices(dut1))

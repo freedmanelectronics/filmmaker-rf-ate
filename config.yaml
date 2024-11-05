@@ -1,4 +1,4 @@
-gender: tx
+gender: rx
 arduino_com_port: COM4
 #tests:
 #  rf_power:

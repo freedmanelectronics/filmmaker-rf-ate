@@ -13,7 +13,7 @@ class FirmwareVersionTest(DeviceTest):
         min_firmware_version: Version,
         min_nordic_version: Version,
     ):
-        super().__init__("firmware_version", [wireless], error_code="F")
+        super().__init__("firmware_version", wireless, error_code="F")
         self._wireless = wireless
         self._min_firmware_version = min_firmware_version
         self._min_nordic_verison = min_nordic_version
@@ -44,6 +44,7 @@ class FirmwareVersionTest(DeviceTest):
 if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
 
     reference, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
@@ -56,5 +57,4 @@ if __name__ == "__main__":
     )
     result = test.execute_test()
 
-    print(result)
-    print(result.failure_modes[2])
+    print(spprint_devices(dut))

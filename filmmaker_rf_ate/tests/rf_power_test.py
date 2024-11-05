@@ -1,7 +1,7 @@
 import time
 from statistics import mean
 from functional_test_core.device_test import DeviceTest
-from functional_test_core.device_test.device_test import DeviceTestTeardownException
+from functional_test_core.device_test.device_test import DeviceTestTeardownError
 from functional_test_core.device_test.observer import Message
 from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.app_commands import AppCommands
@@ -28,7 +28,7 @@ class RFPowerTest(DeviceTest):
         channels: list[RadioChannel] = None,
         antennae_min_delta: list[AntennaConfig] = None,
     ):
-        super().__init__("connection_stats", [wireless], error_code="R")
+        super().__init__("connection_stats", wireless, error_code="R")
         self._dut = wireless
         self._com_port = com_port
         self._channels = (
@@ -202,12 +202,13 @@ class RFPowerTest(DeviceTest):
                 "Resetting failed!",
             )
         )
-        raise exc if exc else DeviceTestTeardownException()
+        raise exc if exc else DeviceTestTeardownError()
 
 
 if __name__ == "__main__":
     from filmmaker_rf_ate.utils.get_devices import get_devices
     from filmmaker_rf_ate.config import CONFIG
+    from functional_test_core.models.utils import spprint_devices
 
     ref, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref
@@ -221,7 +222,4 @@ if __name__ == "__main__":
     )
     result = test.execute_test()
 
-    print(result)
-
-    for fm in result.failure_modes:
-        print(fm)
+    print(spprint_devices(dut, verbose=True))

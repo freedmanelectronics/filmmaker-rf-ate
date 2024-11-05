@@ -148,13 +148,13 @@ files = [
 
 [[package]]
 name = "dataclasses-struct"
-version = "0.8.2"
+version = "0.8.3"
 description = "Converting dataclasses to and from fixed-length binary data using struct"
 optional = false
 python-versions = "<4.0.0,>=3.8.1"
 files = [
-    {file = "dataclasses_struct-0.8.2-py3-none-any.whl", hash = "sha256:0e9996e48e2b51338dedef63bb8ba9825a525bca9692ac9cd8ae076de22432e2"},
-    {file = "dataclasses_struct-0.8.2.tar.gz", hash = "sha256:20efa1369eacd6de7f27f124757c5f70f61e572999c5288dd9b28219bc727e16"},
+    {file = "dataclasses_struct-0.8.3-py3-none-any.whl", hash = "sha256:ab0ae3fd93a98b446893182522bfddf3040913dffbe5a83ab4c08f312ceb0592"},
+    {file = "dataclasses_struct-0.8.3.tar.gz", hash = "sha256:c125f3687940afcd2e3bbf2fd73ef31fa425265be65557e360527a4c1ccd038e"},
 ]
 
 [package.dependencies]
@@ -173,7 +173,7 @@ files = [
 
 [[package]]
 name = "functional-test-core"
-version = "0.3.0"
+version = "0.4.1"
 description = "Core python library for functional tests"
 optional = false
 python-versions = "^3.10"
@@ -182,16 +182,16 @@ develop = false
 
 [package.dependencies]
 colorama = "^0.4.6"
-rode-core = "^0.3.1"
-rode-devices = "^7.0.0"
+rode-core = "^4.1.0"
+rode-devices = "^8.1.2"
 sqlalchemy = "^2.0.31"
 sqlalchemy-json = "^0.7.0"
 
 [package.source]
 type = "git"
 url = "git@github.com:freedmanelectronics/functional-test-core.git"
-reference = "hotfix/verbose"
-resolved_reference = "efddbf76f89c921054f1f95b0366e707e4dab243"
+reference = "0.4.1"
+resolved_reference = "d8c0ddf4360fe198d8c063002561c0cd3f225c0e"
 
 [[package]]
 name = "greenlet"
@@ -580,20 +580,19 @@ telemetry = ["opentelemetry-api (==1.18.0)", "opentelemetry-exporter-otlp-proto-
 
 [[package]]
 name = "mysqlclient"
-version = "2.2.4"
+version = "2.2.5"
 description = "Python interface to MySQL"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mysqlclient-2.2.4-cp310-cp310-win_amd64.whl", hash = "sha256:ac44777eab0a66c14cb0d38965572f762e193ec2e5c0723bcd11319cc5b693c5"},
-    {file = "mysqlclient-2.2.4-cp311-cp311-win_amd64.whl", hash = "sha256:329e4eec086a2336fe3541f1ce095d87a6f169d1cc8ba7b04ac68bcb234c9711"},
-    {file = "mysqlclient-2.2.4-cp312-cp312-win_amd64.whl", hash = "sha256:e1ebe3f41d152d7cb7c265349fdb7f1eca86ccb0ca24a90036cde48e00ceb2ab"},
-    {file = "mysqlclient-2.2.4-cp38-cp38-win_amd64.whl", hash = "sha256:3c318755e06df599338dad7625f884b8a71fcf322a9939ef78c9b3db93e1de7a"},
-    {file = "mysqlclient-2.2.4-cp39-cp39-win_amd64.whl", hash = "sha256:9d4c015480c4a6b2b1602eccd9846103fc70606244788d04aa14b31c4bd1f0e2"},
-    {file = "mysqlclient-2.2.4-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:d43987bb9626096a302ca6ddcdd81feaeca65ced1d5fe892a6a66b808326aa54"},
-    {file = "mysqlclient-2.2.4-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:4e80dcad884dd6e14949ac6daf769123223a52a6805345608bf49cdaf7bc8b3a"},
-    {file = "mysqlclient-2.2.4-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:9d3310295cb682232cadc28abd172f406c718b9ada41d2371259098ae37779d3"},
-    {file = "mysqlclient-2.2.4.tar.gz", hash = "sha256:33bc9fb3464e7d7c10b1eaf7336c5ff8f2a3d3b88bab432116ad2490beb3bf41"},
+    {file = "mysqlclient-2.2.5-cp310-cp310-win_amd64.whl", hash = "sha256:b78438314199504c64f69e1e3521f2c9b419f19fcd85158b44c997b64409a6af"},
+    {file = "mysqlclient-2.2.5-cp311-cp311-win_amd64.whl", hash = "sha256:b54511648c1455b43ac28f8b4c1f732c5b0c343e87f7a3bd6fc9f9fe0f91934e"},
+    {file = "mysqlclient-2.2.5-cp312-cp312-win_amd64.whl", hash = "sha256:e871ede4261d0d42b8ed20a2459db411c7deafedd8e77b7e4ba760be4a6a752b"},
+    {file = "mysqlclient-2.2.5-cp313-cp313-win_amd64.whl", hash = "sha256:8012c633aab8c91ea8172ac479807135b171501b9cad1a7cd9b58c4dc8dcdab5"},
+    {file = "mysqlclient-2.2.5-cp39-cp39-win_amd64.whl", hash = "sha256:3f9625bea2b9bcde0ace76b32708762d44597491092c819fd1bff5b4e27f709b"},
+    {file = "mysqlclient-2.2.5-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:1d2e2ca0fe8405d8d6464edd01bf059951279e4bc27284d39341bd4737b2bc64"},
+    {file = "mysqlclient-2.2.5-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:aee14f1872114865679fcb09aac3772de4595fa7dcf2f83a4c7afee15e508854"},
+    {file = "mysqlclient-2.2.5.tar.gz", hash = "sha256:add8643c32f738014d252d2bdebb478623b04802e8396d5903905db36474d3ff"},
 ]
 
 [[package]]
@@ -787,13 +786,13 @@ resolved_reference = "977ecceeb7563505eb90882fced333fb16dd4334"
 
 [[package]]
 name = "rode-core"
-version = "0.3.1"
+version = "4.1.0"
 description = "RØDE Core Package (part of rode namespace) presents the foundations for the RØDE Python Utility package(s)"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "rode_core-0.3.1-py3-none-any.whl", hash = "sha256:bd8de6668fa4327136d23f16dd8889cce598d536c9390872ed2815d267691407"},
-    {file = "rode_core-0.3.1.tar.gz", hash = "sha256:2fcae3f30182eabfee398541455c3cde389fea80abe2e00fa239e9dd71aeda09"},
+    {file = "rode_core-4.1.0-py3-none-any.whl", hash = "sha256:4bac505145db9c4e0395fc34b45c87e4d86a85b45940e6fbfdc2e84d63fff3f1"},
+    {file = "rode_core-4.1.0.tar.gz", hash = "sha256:bd42a8f8839d45927616a70417704a37141be824cee286018ee2ca7b04c106dc"},
 ]
 
 [package.dependencies]
@@ -806,13 +805,13 @@ reference = "anydev-gitlab"
 
 [[package]]
 name = "rode-devices"
-version = "7.5.0"
+version = "8.2.0"
 description = ""
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "rode_devices-7.5.0-py3-none-any.whl", hash = "sha256:123b6f1eb15380b56dca52d7512b1ad19188b5c5310494fe46cc42846ca51008"},
-    {file = "rode_devices-7.5.0.tar.gz", hash = "sha256:66de2bf5f0bd2d189946b7c260d07cdb19d9405f2ee5a17eee5c10f4b87a0a87"},
+    {file = "rode_devices-8.2.0-py3-none-any.whl", hash = "sha256:68d1b6040bbf1464470533fb9e06fc4ee7cee111b3aa8ad746963e621b169907"},
+    {file = "rode_devices-8.2.0.tar.gz", hash = "sha256:94fe444fe46c6ab71ecb1318ddd23071790cf2436ad2858ded8df93122fa7148"},
 ]
 
 [package.dependencies]
@@ -821,7 +820,7 @@ dataclasses-struct = ">=0.8.2,<0.9.0"
 hidapi = ">=0.14.0,<0.15.0"
 intelhex = ">=2.3.0,<3.0.0"
 pyyaml = ">=6.0.1,<7.0.0"
-rode-core = ">=0.3.1,<0.4.0"
+rode-core = ">=4.1.0,<5.0.0"
 
 [package.source]
 type = "legacy"
@@ -857,23 +856,23 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "75.1.0"
+version = "75.3.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-75.1.0-py3-none-any.whl", hash = "sha256:35ab7fd3bcd95e6b7fd704e4a1539513edad446c097797f2985e0e4b960772f2"},
-    {file = "setuptools-75.1.0.tar.gz", hash = "sha256:d59a21b17a275fb872a9c3dae73963160ae079f1049ed956880cd7c09b120538"},
+    {file = "setuptools-75.3.0-py3-none-any.whl", hash = "sha256:f2504966861356aa38616760c0f66568e535562374995367b4e69c7143cf6bcd"},
+    {file = "setuptools-75.3.0.tar.gz", hash = "sha256:fba5dd4d766e97be1b1681d98712680ae8f2f26d7881245f2ce9e40714f1a686"},
 ]
 
 [package.extras]
 check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1)", "ruff (>=0.5.2)"]
-core = ["importlib-metadata (>=6)", "importlib-resources (>=5.10.2)", "jaraco.collections", "jaraco.functools", "jaraco.text (>=3.7)", "more-itertools", "more-itertools (>=8.8)", "packaging", "packaging (>=24)", "platformdirs (>=2.6.2)", "tomli (>=2.0.1)", "wheel (>=0.43.0)"]
+core = ["importlib-metadata (>=6)", "importlib-resources (>=5.10.2)", "jaraco.collections", "jaraco.functools", "jaraco.text (>=3.7)", "more-itertools", "more-itertools (>=8.8)", "packaging", "packaging (>=24)", "platformdirs (>=4.2.2)", "tomli (>=2.0.1)", "wheel (>=0.43.0)"]
 cover = ["pytest-cov"]
 doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier", "towncrier (<24.7)"]
 enabler = ["pytest-enabler (>=2.2)"]
-test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "jaraco.test", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.*)", "pytest-home (>=0.5)", "pytest-perf", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel (>=0.44.0)"]
-type = ["importlib-metadata (>=7.0.2)", "jaraco.develop (>=7.21)", "mypy (==1.11.*)", "pytest-mypy"]
+test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "jaraco.test (>=5.5)", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.*)", "pytest-home (>=0.5)", "pytest-perf", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel (>=0.44.0)"]
+type = ["importlib-metadata (>=7.0.2)", "jaraco.develop (>=7.21)", "mypy (==1.12.*)", "pytest-mypy"]
 
 [[package]]
 name = "sqlalchemy"
@@ -1005,4 +1004,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "14c7516ba10c66b08c345943bacd36aa380955900d588b28e080515bd13873cc"
+content-hash = "706aeea2991594ad2114847d240715bc3dcee4142d0c263c95083c41fcd40e5c"
