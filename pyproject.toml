@@ -19,6 +19,7 @@ pyserial = "^3.5"
 kivy = "^2.3.0"
 pyaml = "^24.9.0"
 rfid-server = {git = "git@github.com:freedmanelectronics/RFID_Server.git", rev = "poetry"}
+hidapi = "0.14.0"
 
 
 [build-system]
