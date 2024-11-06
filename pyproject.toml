@@ -13,12 +13,13 @@ optional = true
 ruff = "^0.6.7"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "hotfix/verbose"}
+python = "^3.10"
+functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "0.3.0"}
 pyserial = "^3.5"
 kivy = "^2.3.0"
 pyaml = "^24.9.0"
 rfid-server = {git = "git@github.com:freedmanelectronics/RFID_Server.git", rev = "poetry"}
+hidapi = "0.14.0"
 
 
 [build-system]

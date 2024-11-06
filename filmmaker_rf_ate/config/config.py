@@ -6,11 +6,11 @@ import yaml
 
 from rode.devices.wireless.wireless_go_2_rx import WirelessGo2Rx
 from rode.devices.wireless.wireless_go_2_tx import WirelessGo2Tx
-from rode.devices.wireless.wireless_go_3_tx import WirelessGo3Tx
-from rode.devices.wireless.wireless_go_3_rx import WirelessGo3Rx
+# from rode.devices.wireless.wireless_go_3_tx import WirelessGo3Tx
+# from rode.devices.wireless.wireless_go_3_rx import WirelessGo3Rx
 
-# from rode.devices.wireless.filmmaker_2_rx import Filmmaker2Rx
-# from rode.devices.wireless.filmmaker_2_tx import Filmmaker2Tx
+from rode.devices.wireless.filmmaker_2_rx import Filmmaker2Rx
+from rode.devices.wireless.filmmaker_2_tx import Filmmaker2Tx
 from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 from dataclasses import dataclass, field
 
@@ -19,8 +19,10 @@ from filmmaker_rf_ate.config.tests import TestConfig
 DEFAULT_CONFIG_PATH = Path.cwd() / "config.yaml"
 REF_RX_CLASS = WirelessGo2Rx
 REF_TX_CLASS = WirelessGo2Tx
-RX_CLASS = WirelessGo3Rx  # Filmmaker2Rx
-TX_CLASS = WirelessGo3Tx  # Filmmaker2Tx
+# RX_CLASS = WirelessGo3Rx  # Filmmaker2Rx
+# TX_CLASS = WirelessGo3Tx  # Filmmaker2Tx
+RX_CLASS = Filmmaker2Rx
+TX_CLASS = Filmmaker2Tx
 
 
 @dataclass

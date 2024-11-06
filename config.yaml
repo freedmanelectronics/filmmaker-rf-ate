@@ -1,5 +1,5 @@
-gender: tx
-arduino_com_port: COM4
+gender: rx
+arduino_com_port: /dev/ttyACM0
 #tests:
 #  rf_power:
 #    channels:
