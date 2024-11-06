@@ -13,7 +13,7 @@ optional = true
 ruff = "^0.6.7"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "0.4.1"}
 pyserial = "^3.5"
 kivy = "^2.3.0"
