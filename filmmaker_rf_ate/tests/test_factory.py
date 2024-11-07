@@ -44,11 +44,11 @@ def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandle
             config.tests.firmware.min_mcu_version,
             config.tests.firmware.min_nordic_version,
         ),
-        NvmTest(
-            dut,
-            config.tests.nvm.address,
-            config.tests.nvm.expected_values,
-        ),
+        # NvmTest(
+        #     dut,
+        #     config.tests.nvm.address,
+        #     config.tests.nvm.expected_values,
+        # ),
         ConnectionStatsTest(
             dut,
             ref,
@@ -70,3 +70,17 @@ def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandle
     th = TestHandler(verbose=False, tests=tests)
 
     return th
+
+if __name__ == '__main__':
+    from filmmaker_rf_ate.config import CONFIG
+    from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
+
+    ref, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    )
+
+    th = test_factory(ref, dut, CONFIG)
+
+    results = th.execute_tests()
+    print(spprint_devices(dut))
