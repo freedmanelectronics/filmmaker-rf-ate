@@ -28,7 +28,7 @@ class RFPowerTest(DeviceTest):
         channels: list[RadioChannel] = None,
         antennae_min_delta: list[AntennaConfig] = None,
     ):
-        super().__init__("connection_stats", wireless, error_code="R")
+        super().__init__("rf_power", wireless, error_code="R")
         self._dut = wireless
         self._com_port = com_port
         self._channels = (
