@@ -172,7 +172,7 @@ def get_devices(
     return ref, dut1, dut2, dut3, dut4
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
 
     devices = get_devices(CONFIG.device_classes.dut, CONFIG.device_classes.ref)

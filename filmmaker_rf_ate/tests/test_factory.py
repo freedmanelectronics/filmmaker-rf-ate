@@ -71,7 +71,8 @@ def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandle
 
     return th
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
     from functional_test_core.models.utils import spprint_devices

@@ -90,10 +90,16 @@ class ConnectionStatsTest(DeviceTest):
         # Check min RSSI on short duration
         try:
             conn_stats_short = self._dut.rode_device.handle_command(
-                RadioCommands.radio_get_advanced_connection_stats(0, self._duration_short)
+                RadioCommands.radio_get_advanced_connection_stats(
+                    0, self._duration_short
+                )
             )
         except (NackStatus, ErrorStatus) as e:
-            ret.append(TestInfo("connection_stats_short_measured", False, info={'exception': e}))
+            ret.append(
+                TestInfo(
+                    "connection_stats_short_measured", False, info={"exception": e}
+                )
+            )
             return ret
 
         conn_stats_retrieved = conn_stats_short is not None
@@ -112,10 +118,14 @@ class ConnectionStatsTest(DeviceTest):
         # Check total number of errors on long duration
         try:
             conn_stats_long = self._dut.rode_device.handle_command(
-                RadioCommands.radio_get_advanced_connection_stats(0, self._duration_long)
+                RadioCommands.radio_get_advanced_connection_stats(
+                    0, self._duration_long
+                )
             )
         except (NackStatus, ErrorStatus) as e:
-            ret.append(TestInfo("connection_stats_long_measured", False, info={'exception': e}))
+            ret.append(
+                TestInfo("connection_stats_long_measured", False, info={"exception": e})
+            )
             return ret
 
         conn_stats_retrieved = conn_stats_long is not None
