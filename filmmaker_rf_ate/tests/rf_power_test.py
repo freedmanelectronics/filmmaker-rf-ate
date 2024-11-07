@@ -210,8 +210,8 @@ if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from functional_test_core.models.utils import spprint_devices
 
-    ref, dut, _, _, _ = get_devices(
-        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    reference, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
     )
 
     test = RFPowerTest(

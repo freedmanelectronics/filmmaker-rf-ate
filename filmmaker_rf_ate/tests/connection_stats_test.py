@@ -15,7 +15,7 @@ class ConnectionStatsTest(DeviceTest):
         reference: DeviceInfo,
         gender: Literal["rx", "tx"],
         duration_short: int = 120,
-        duration_long: int = 400,
+        duration_long: int = 500,
         min_rssi: int = -95,
         allowed_errors: int = 1000,
     ):
@@ -167,12 +167,12 @@ if __name__ == "__main__":
     from filmmaker_rf_ate.utils.get_devices import get_devices
     from functional_test_core.models.utils import spprint_devices
 
-    ref, dut1, _, _, _ = get_devices(
-        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    ref, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
     )
 
     test = ConnectionStatsTest(
-        dut1,
+        dut,
         ref,
         CONFIG.gender,
         CONFIG.tests.connection_stats.duration_short,
@@ -182,4 +182,4 @@ if __name__ == "__main__":
     )
     result = test.execute_test()
 
-    print(spprint_devices(dut1))
+    print(spprint_devices(dut))
