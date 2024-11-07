@@ -1,5 +1,6 @@
 import logging
 import platform
+import time
 
 from functional_test_core.models import DeviceInfo
 from functional_test_core.utils import get_connected_devices, get_devices_by_hid
@@ -23,8 +24,8 @@ def _get_device_of_class(
 
 
 def _get_devices_windows(
-    dut_class: type(WirelessDeviceBase),
-    ref_class: type(WirelessDeviceBase),
+    dut_class: type[WirelessDeviceBase],
+    ref_class: type[WirelessDeviceBase],
     session: Session = None,
 ) -> tuple[
     DeviceInfo | None,
@@ -132,8 +133,8 @@ def _get_devices_linux(
 
 
 def get_devices(
-    dut_class: type(WirelessDeviceBase),
-    ref_class: type(WirelessDeviceBase),
+    dut_class: type[WirelessDeviceBase],
+    ref_class: type[WirelessDeviceBase],
     session: Session = None,
     retries: int = 0,
     delay: float = 0.1,
@@ -165,7 +166,7 @@ def get_devices(
 
         if all([ref, dut1, dut2, dut3, dut4]):
             break
-        # time.sleep(delay)
+        time.sleep(delay)
 
     assert ref is not None, f"Reference device {ref_class.__name__} not found"
 
