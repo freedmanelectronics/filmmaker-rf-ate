@@ -170,3 +170,12 @@ def get_devices(
     assert ref is not None, f"Reference device {ref_class.__name__} not found"
 
     return ref, dut1, dut2, dut3, dut4
+
+
+if __name__ == '__main__':
+    from filmmaker_rf_ate.config import CONFIG
+
+    devices = get_devices(CONFIG.device_classes.dut, CONFIG.device_classes.ref)
+    print(devices)
+
+    print(get_devices_by_hid([CONFIG.device_classes.dut, CONFIG.device_classes.ref]))
