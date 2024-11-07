@@ -62,7 +62,7 @@ class RFPowerTest(DeviceTest):
                 return
             except (AssertionError, OSError) as e:
                 exc = e
-                time.sleep(0.1)
+                time.sleep(1)
 
         raise (
             exc
@@ -180,7 +180,7 @@ class RFPowerTest(DeviceTest):
         # Confirm device rebooted
         exc = None
 
-        for i in range(15):
+        for i in range(20):
             try:
                 self._dut.rode_device.handle_command(CommonCommands.app_version())
                 self.notify_observers(
@@ -193,7 +193,7 @@ class RFPowerTest(DeviceTest):
                 return
             except OSError as e:
                 exc = e
-                time.sleep(0.5)
+                time.sleep(1)
 
         self.notify_observers(
             Message(

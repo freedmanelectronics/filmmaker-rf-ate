@@ -2,7 +2,7 @@ import logging
 import platform
 
 from functional_test_core.models import DeviceInfo
-from functional_test_core.utils import get_connected_devices
+from functional_test_core.utils import get_connected_devices, get_devices_by_hid
 from requests import Session
 from rode.core.device_base import RodeDeviceBase
 from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
@@ -78,7 +78,57 @@ def _get_devices_linux(
     DeviceInfo | None,
     DeviceInfo | None,
 ]:
-    pass
+    devices = get_devices_by_hid([dut_class, ref_class], session)
+
+    ref = next(iter(devices[ref_class].values()), None)
+
+    dut1_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[8] == b"4"[0]
+            ]
+        ),
+        None,
+    )
+    dut2_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[8] == b"3"[0]
+            ]
+        ),
+        None,
+    )
+    dut3_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[8] == b"2"[0]
+            ]
+        ),
+        None,
+    )
+    dut4_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[8] == b"1"[0]
+            ]
+        ),
+        None,
+    )
+
+    dut1 = devices[dut_class].get(dut1_path)
+    dut2 = devices[dut_class].get(dut2_path)
+    dut3 = devices[dut_class].get(dut3_path)
+    dut4 = devices[dut_class].get(dut4_path)
+
+    return ref, dut1, dut2, dut3, dut4
 
 
 def get_devices(
@@ -117,6 +167,6 @@ def get_devices(
             break
         # time.sleep(delay)
 
-    assert ref is not None, "Reference device not found"
+    assert ref is not None, f"Reference device {ref_class.__name__} not found"
 
     return ref, dut1, dut2, dut3, dut4

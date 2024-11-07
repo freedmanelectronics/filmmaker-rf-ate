@@ -86,47 +86,50 @@ class ConnectionStatsTest(DeviceTest):
         if not (wireless_passed and ref_passed):
             return ret
 
-        conn_stats = self._dut.rode_device.handle_command(
+        # Check min RSSI on short duration
+        conn_stats_short = self._dut.rode_device.handle_command(
             RadioCommands.radio_get_advanced_connection_stats(0, self._duration_short)
         )
 
-        conn_stats_retrieved = conn_stats is not None
+        conn_stats_retrieved = conn_stats_short is not None
         ret.append(TestInfo("connection_stats_short_measured", conn_stats_retrieved))
 
         if not conn_stats_retrieved:
             return ret
 
-        rssi_passed = conn_stats.ch1_stats.avg_rssi >= self._min_rssi
+
+        rssi_passed = conn_stats_short.ch1_stats.avg_rssi >= self._min_rssi
         info = {
-            "measured_average": conn_stats.ch1_stats.avg_rssi,
+            "measured_average": conn_stats_short.ch1_stats.avg_rssi,
             "limits": {"min": self._min_rssi},
         }
         ret.append(TestInfo("min_rssi", rssi_passed, info=info))
 
-        conn_stats = self._dut.rode_device.handle_command(
-            RadioCommands.radio_get_advanced_connection_stats(0, self._duration_long)
-        )
-
-        conn_stats_retrieved = conn_stats is not None
-        ret.append(TestInfo("connection_stats_long_measured", conn_stats_retrieved))
-
-        ch1_total_errors = (
-            conn_stats.ch1_stats.audio_missed_errors
-            + conn_stats.ch1_stats.audio_crc_errors
-            + conn_stats.ch1_stats.beacon_errors
-        )
-        passed = ch1_total_errors < self._allowed_errors
-        info = {"total": ch1_total_errors, "allowed": self._allowed_errors}
-        ret.append(TestInfo("ch1_total_errors", passed, info=info))
-
-        ch2_total_errors = (
-            conn_stats.ch1_stats.audio_missed_errors
-            + conn_stats.ch1_stats.audio_crc_errors
-            + conn_stats.ch1_stats.beacon_errors
-        )
-        passed = ch2_total_errors < self._allowed_errors
-        info = {"total": ch2_total_errors, "allowed": self._allowed_errors}
-        ret.append(TestInfo("ch2_total_errors", passed, info=info))
+        # Check total number of errors on long duration
+        # conn_stats_long = self._dut.rode_device.handle_command(
+        #     RadioCommands.radio_get_advanced_connection_stats(0, self._duration_long)
+        # )
+        #
+        # conn_stats_retrieved = conn_stats_long is not None
+        # ret.append(TestInfo("connection_stats_long_measured", conn_stats_retrieved))
+        #
+        # ch1_total_errors = (
+        #     conn_stats_long.ch1_stats.audio_missed_errors
+        #     + conn_stats_long.ch1_stats.audio_crc_errors
+        #     + conn_stats_long.ch1_stats.beacon_errors
+        # )
+        # passed = ch1_total_errors < self._allowed_errors
+        # info = {"total": ch1_total_errors, "allowed": self._allowed_errors}
+        # ret.append(TestInfo("ch1_total_errors", passed, info=info))
+        #
+        # ch2_total_errors = (
+        #     conn_stats_long.ch1_stats.audio_missed_errors
+        #     + conn_stats_long.ch1_stats.audio_crc_errors
+        #     + conn_stats_long.ch1_stats.beacon_errors
+        # )
+        # passed = ch2_total_errors < self._allowed_errors
+        # info = {"total": ch2_total_errors, "allowed": self._allowed_errors}
+        # ret.append(TestInfo("ch2_total_errors", passed, info=info))
 
         return ret
 

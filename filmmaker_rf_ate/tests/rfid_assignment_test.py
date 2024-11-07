@@ -23,10 +23,10 @@ class RfidAssignmentTest(DeviceTest):
     def test_routine(self) -> list[TestInfo]:
         device_rfid = self._wireless.rode_device.handle_command(RadioGetRfId(0))
 
-        if device_rfid == b"\xff\xff\xff\xff":  # RFID has not been assigned
+        if device_rfid == b"\xff\xff\xff\xff" or device_rfid[0] & 0xF0 != 0x080:  # RFID has not been assigned, or is invalid
             rfid_from_server = self._rfid_client.next(
                 self._wireless.family.name,
-                self._wireless.family.product_id,
+                self._wireless.family.pid,
                 comment=self._comment,
             )
             rfid_bytes = bytes.fromhex(rfid_from_server[2:])
