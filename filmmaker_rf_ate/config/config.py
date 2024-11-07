@@ -32,6 +32,7 @@ class DeviceClasses:
 class Config:
     gender: Literal["rx", "tx"]
     arduino_com_port: str = "COM4"
+    hid_index: int = 8
     device_classes: DeviceClasses = None
     tests: TestConfig = None
 
