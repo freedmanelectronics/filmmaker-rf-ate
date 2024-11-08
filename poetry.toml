@@ -1,0 +1,8 @@
+[virtualenvs]
+create = true
+in-project = true
+
+[http-basic]
+[http-basic.anydev-gitlab]
+username = "rode"
+password = "cxyGuxLnt7azVsyPuMpG"

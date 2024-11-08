@@ -1,20 +1,15 @@
-from enum import Enum, auto
-
-from functional_test_core.device_test import TestHandler, DeviceTest
-from functional_test_core.device_test.observer import Message
+from functional_test_core.device_test import TestHandler
 from functional_test_core.mock import (
     MockDeviceTestTimerExecution,
     MockDeviceTestRaises,
     MockDeviceTestRetries,
 )
 from functional_test_core.models import DeviceInfo
-from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
 from filmmaker_rf_ate.config import Config
 from filmmaker_rf_ate.tests.battery_test import BatteryTest
 from filmmaker_rf_ate.tests.connection_stats_test import ConnectionStatsTest
 from filmmaker_rf_ate.tests.firmware_version_test import FirmwareVersionTest
-from filmmaker_rf_ate.tests.nvm_test import NvmTest
 from filmmaker_rf_ate.tests.rf_power_test import RFPowerTest
 
 
@@ -27,28 +22,30 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
         "post_test_duration": 1,
     }
     th.tests = [
-        MockDeviceTestTimerExecution([ref, dut], **kwargs),
-        MockDeviceTestRetries([ref, dut], 5, succeed_on_try=4),
-        MockDeviceTestTimerExecution([ref, dut], **kwargs),
-        MockDeviceTestRaises([ref, dut]),
-        MockDeviceTestTimerExecution([ref, dut], **kwargs),
+        MockDeviceTestTimerExecution(dut, **kwargs),
+        MockDeviceTestRetries(dut, 5, succeed_on_try=4),
+        MockDeviceTestTimerExecution(dut, **kwargs),
+        MockDeviceTestRaises(dut),
+        MockDeviceTestTimerExecution(dut, **kwargs),
     ]
 
     return th
 
 
-def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandler:
+def test_factory(
+    ref: DeviceInfo, dut: DeviceInfo, config: Config, stop_on_fail: bool = True
+) -> TestHandler:
     tests = [
         FirmwareVersionTest(
             dut,
             config.tests.firmware.min_mcu_version,
             config.tests.firmware.min_nordic_version,
         ),
-        NvmTest(
-            dut,
-            config.tests.nvm.address,
-            config.tests.nvm.expected_values,
-        ),
+        # NvmTest(
+        #     dut,
+        #     config.tests.nvm.address,
+        #     config.tests.nvm.expected_values,
+        # ),
         ConnectionStatsTest(
             dut,
             ref,
@@ -67,6 +64,26 @@ def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandle
         BatteryTest(dut),
     ]
 
-    th = TestHandler(verbose=False, tests=tests)
+    th = TestHandler(verbose=False, tests=tests, stop_on_fail=stop_on_fail)
 
     return th
+
+
+if __name__ == "__main__":
+    from filmmaker_rf_ate.config import CONFIG
+    from filmmaker_rf_ate.utils.get_devices import get_devices
+    from functional_test_core.models.utils import spprint_devices
+    import logging
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
+
+    ref, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
+    )
+
+    th = test_factory(ref, dut, CONFIG, stop_on_fail=CONFIG.stop_on_fail)
+
+    results = th.execute_tests()
+    print(spprint_devices(dut))

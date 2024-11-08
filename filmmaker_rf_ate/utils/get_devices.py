@@ -1,8 +1,9 @@
 import logging
 import platform
+import time
 
 from functional_test_core.models import DeviceInfo
-from functional_test_core.utils import get_connected_devices
+from functional_test_core.utils import get_connected_devices, get_devices_by_hid
 from requests import Session
 from rode.core.device_base import RodeDeviceBase
 from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
@@ -23,8 +24,8 @@ def _get_device_of_class(
 
 
 def _get_devices_windows(
-    dut_class: type(WirelessDeviceBase),
-    ref_class: type(WirelessDeviceBase),
+    dut_class: type[WirelessDeviceBase],
+    ref_class: type[WirelessDeviceBase],
     session: Session = None,
 ) -> tuple[
     DeviceInfo | None,
@@ -70,7 +71,10 @@ def _get_devices_windows(
 
 
 def _get_devices_linux(
-    dut_class, ref_class, session: Session = None
+    dut_class: type[WirelessDeviceBase],
+    ref_class: type[WirelessDeviceBase],
+    hid_index: int,
+    session: Session = None,
 ) -> tuple[
     DeviceInfo | None,
     DeviceInfo | None,
@@ -78,12 +82,65 @@ def _get_devices_linux(
     DeviceInfo | None,
     DeviceInfo | None,
 ]:
-    pass
+    assert hid_index is not None, "Please provide a HID index"
+
+    devices = get_devices_by_hid([dut_class, ref_class], session)
+
+    ref = next(iter(devices[ref_class].values()), None)
+
+    dut1_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[hid_index] == b"4"[0]
+            ]
+        ),
+        None,
+    )
+    dut2_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[hid_index] == b"3"[0]
+            ]
+        ),
+        None,
+    )
+    dut3_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[hid_index] == b"2"[0]
+            ]
+        ),
+        None,
+    )
+    dut4_path = next(
+        iter(
+            [
+                hid_path
+                for hid_path in devices[dut_class].keys()
+                if hid_path[hid_index] == b"1"[0]
+            ]
+        ),
+        None,
+    )
+
+    dut1 = devices[dut_class].get(dut1_path)
+    dut2 = devices[dut_class].get(dut2_path)
+    dut3 = devices[dut_class].get(dut3_path)
+    dut4 = devices[dut_class].get(dut4_path)
+
+    return ref, dut1, dut2, dut3, dut4
 
 
 def get_devices(
-    dut_class: type(WirelessDeviceBase),
-    ref_class: type(WirelessDeviceBase),
+    dut_class: type[WirelessDeviceBase],
+    ref_class: type[WirelessDeviceBase],
+    hid_index: int = None,
     session: Session = None,
     retries: int = 0,
     delay: float = 0.1,
@@ -100,7 +157,7 @@ def get_devices(
     for i in range(retries + 1):
         if operating_system == "Linux":
             ref, dut1, dut2, dut3, dut4 = _get_devices_linux(
-                dut_class, ref_class, session=session
+                dut_class, ref_class, session=session, hid_index=hid_index
             )
         elif operating_system == "Windows":
             logger.warning(
@@ -115,8 +172,39 @@ def get_devices(
 
         if all([ref, dut1, dut2, dut3, dut4]):
             break
-        # time.sleep(delay)
+        time.sleep(delay)
 
-    assert ref is not None, "Reference device not found"
+    assert ref is not None, f"Reference device {ref_class.__name__} not found"
 
     return ref, dut1, dut2, dut3, dut4
+
+
+def find_hid_index(device_class: type[RodeDeviceBase]):
+    device_hids = list(get_devices_by_hid([device_class])[device_class].keys())
+
+    assert len(device_hids) >= 2, "Please connect more than one device!"
+    diff = []
+    for i, (x, y) in enumerate(zip(device_hids[0], device_hids[1])):
+        if x != y:
+            diff.append(i)
+
+    assert (
+        len(diff) > 0
+    ), "No difference in HID path could not be found! Maybe you have the wrong version of hidapi installed (must be 0.14.0)?"
+
+    return diff[0]
+
+
+if __name__ == "__main__":
+    from filmmaker_rf_ate.config import CONFIG
+
+    devices = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
+    )
+    print(devices)
+
+    # print(get_devices_by_hid([CONFIG.device_classes.dut, CONFIG.device_classes.ref]))
+
+    hid_index = find_hid_index(CONFIG.device_classes.dut)
+
+    print(f"HID index: {hid_index}")

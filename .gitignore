@@ -240,3 +240,6 @@ fabric.properties
 
 # SQLite databases
 *.db
+
+# Project files
+config.yaml

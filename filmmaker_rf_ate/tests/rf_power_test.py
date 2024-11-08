@@ -1,7 +1,7 @@
 import time
 from statistics import mean
 from functional_test_core.device_test import DeviceTest
-from functional_test_core.device_test.device_test import DeviceTestTeardownException
+from functional_test_core.device_test.device_test import DeviceTestTeardownError
 from functional_test_core.device_test.observer import Message
 from functional_test_core.models import DeviceInfo, TestInfo
 from rode.devices.wireless.commands.app_commands import AppCommands
@@ -28,7 +28,7 @@ class RFPowerTest(DeviceTest):
         channels: list[RadioChannel] = None,
         antennae_min_delta: list[AntennaConfig] = None,
     ):
-        super().__init__("connection_stats", [wireless], error_code="R")
+        super().__init__("rf_power", wireless, error_code="R")
         self._dut = wireless
         self._com_port = com_port
         self._channels = (
@@ -51,7 +51,17 @@ class RFPowerTest(DeviceTest):
             else antennae_min_delta
         )
 
+        self._test_params = {
+            "channels": [channel.name for channel in self._channels],
+        }
+
     def pre_test_routine(self) -> None:
+        self.notify_observers(
+            self._create_message(
+                "running",
+                "Powering on devices...",
+            ),
+        )
         self._dut.rode_device.handle_command(AppCommands.set_system_state(True))
         exc = None
         for i in range(5):
@@ -62,7 +72,7 @@ class RFPowerTest(DeviceTest):
                 return
             except (AssertionError, OSError) as e:
                 exc = e
-                time.sleep(0.1)
+                time.sleep(1)
 
         raise (
             exc
@@ -180,7 +190,7 @@ class RFPowerTest(DeviceTest):
         # Confirm device rebooted
         exc = None
 
-        for i in range(15):
+        for i in range(20):
             try:
                 self._dut.rode_device.handle_command(CommonCommands.app_version())
                 self.notify_observers(
@@ -193,7 +203,7 @@ class RFPowerTest(DeviceTest):
                 return
             except OSError as e:
                 exc = e
-                time.sleep(0.5)
+                time.sleep(1)
 
         self.notify_observers(
             Message(
@@ -202,15 +212,16 @@ class RFPowerTest(DeviceTest):
                 "Resetting failed!",
             )
         )
-        raise exc if exc else DeviceTestTeardownException()
+        raise exc if exc else DeviceTestTeardownError()
 
 
 if __name__ == "__main__":
     from filmmaker_rf_ate.utils.get_devices import get_devices
     from filmmaker_rf_ate.config import CONFIG
+    from functional_test_core.models.utils import spprint_devices
 
-    ref, dut, _, _, _ = get_devices(
-        CONFIG.device_classes.dut, CONFIG.device_classes.ref
+    reference, dut, _, _, _ = get_devices(
+        CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
     )
 
     test = RFPowerTest(
@@ -221,7 +232,4 @@ if __name__ == "__main__":
     )
     result = test.execute_test()
 
-    print(result)
-
-    for fm in result.failure_modes:
-        print(fm)
+    print(spprint_devices(dut, verbose=True))

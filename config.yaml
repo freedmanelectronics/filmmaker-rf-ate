@@ -1,9 +1,0 @@
-gender: tx
-arduino_com_port: COM4
-#tests:
-#  rf_power:
-#    channels:
-#      - CHANNEL_0
-#    antennae:
-#      - antenna: ANTENNA_1
-#        min_delta: 0.1
