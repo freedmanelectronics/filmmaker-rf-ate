@@ -73,6 +73,11 @@ if __name__ == "__main__":
     from filmmaker_rf_ate.config import CONFIG
     from filmmaker_rf_ate.utils.get_devices import get_devices
     from functional_test_core.models.utils import spprint_devices
+    import logging
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
 
     ref, dut, _, _, _ = get_devices(
         CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index

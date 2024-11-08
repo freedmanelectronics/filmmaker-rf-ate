@@ -68,7 +68,7 @@ class ConnectionStatsTest(DeviceTest):
                     AppCommands.system_is_on()
                 ), "Reference could not be powered on"
                 return
-            except AssertionError as e:
+            except (AssertionError, OSError)as e:
                 if i + 1 >= retries:
                     raise e
 
