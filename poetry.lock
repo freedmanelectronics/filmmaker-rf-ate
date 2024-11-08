@@ -191,8 +191,8 @@ sqlalchemy-json = "^0.7.0"
 [package.source]
 type = "git"
 url = "git@github.com:freedmanelectronics/functional-test-core.git"
-reference = "feature/poll-devices"
-resolved_reference = "f58663725642f90434667c83374d6ca7bd2228fd"
+reference = "0.4.2"
+resolved_reference = "75c29097984acd3b30e4716f8b1b9abb2d718950"
 
 [[package]]
 name = "greenlet"
@@ -973,4 +973,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cc6ab260ec8fd663b811b53f8ed4bf921f75a7896a19995e00c6d001baefd544"
+content-hash = "427d84b9bf2247ce17d5e32d0994d336d340140b06acc5d64ca8d516664fd01c"

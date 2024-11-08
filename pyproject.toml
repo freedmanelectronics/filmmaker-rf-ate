@@ -14,7 +14,7 @@ ruff = "^0.6.7"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "feature/poll-devices"}
+functional-test-core = {git = "git@github.com:freedmanelectronics/functional-test-core.git", rev = "0.4.2"}
 pyserial = "^3.5"
 kivy = "^2.3.0"
 pyaml = "^24.9.0"
