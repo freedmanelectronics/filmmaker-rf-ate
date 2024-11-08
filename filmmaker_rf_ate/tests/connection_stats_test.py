@@ -30,10 +30,10 @@ class ConnectionStatsTest(DeviceTest):
         self._allowed_errors = allowed_errors
 
         self._test_params = {
-            'duration_short': self._duration_short,
-            'duration_long': self._duration_long,
-            'min_rssi': self._min_rssi,
-            'allowed_errors': self._allowed_errors
+            "duration_short": self._duration_short,
+            "duration_long": self._duration_long,
+            "min_rssi": self._min_rssi,
+            "allowed_errors": self._allowed_errors,
         }
 
         if self._gender == "tx":
@@ -51,7 +51,7 @@ class ConnectionStatsTest(DeviceTest):
         self.notify_observers(
             self._create_message(
                 "running",
-                'Powering on devices...',
+                "Powering on devices...",
             ),
         )
         self._dut.rode_device.handle_command(AppCommands.set_system_state(True))
@@ -74,7 +74,6 @@ class ConnectionStatsTest(DeviceTest):
 
                 time.sleep(sleep_time)
                 continue
-
 
     def test_routine(self) -> list[TestInfo]:
         ret = []
@@ -304,7 +303,7 @@ if __name__ == "__main__":
     from rode.devices.utils.config_logger import setup_logging
     import logging
 
-    setup_logging('./logging.yaml')
+    setup_logging("./logging.yaml")
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())

@@ -103,7 +103,9 @@ class RootLayout(BoxLayout):
 
                 observer.dut_widget = widget
 
-                test_handler = test_factory(ref, dut, self._config, self._config.stop_on_fail)
+                test_handler = test_factory(
+                    ref, dut, self._config, self._config.stop_on_fail
+                )
                 test_handler.add_observer(observer)
                 results = test_handler.execute_tests()
 
@@ -120,7 +122,9 @@ class RootLayout(BoxLayout):
             else:
                 self.ids.log_label.text = "Tests passed!"
 
-            print(spprint_devices([dut for dut in duts if dut is not None], verbose=False))
+            print(
+                spprint_devices([dut for dut in duts if dut is not None], verbose=False)
+            )
 
         threading.Thread(target=_start_test_callback, daemon=True).start()
 

@@ -52,14 +52,14 @@ class RFPowerTest(DeviceTest):
         )
 
         self._test_params = {
-            'channels': [channel.name for channel in self._channels],
+            "channels": [channel.name for channel in self._channels],
         }
 
     def pre_test_routine(self) -> None:
         self.notify_observers(
             self._create_message(
                 "running",
-                'Powering on devices...',
+                "Powering on devices...",
             ),
         )
         self._dut.rode_device.handle_command(AppCommands.set_system_state(True))

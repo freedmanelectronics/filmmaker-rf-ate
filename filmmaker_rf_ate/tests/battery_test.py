@@ -1,10 +1,13 @@
 # Tests battery
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from functional_test_core.device_test import DeviceTest
 from functional_test_core.models import DeviceInfo, TestInfo
-from rode.devices.wireless.commands.app_commands import GetFuelGaugeCommand, FuelGaugeData
+from rode.devices.wireless.commands.app_commands import (
+    GetFuelGaugeCommand,
+    FuelGaugeData,
+)
 
 
 class BatteryTest(DeviceTest):
@@ -12,14 +15,20 @@ class BatteryTest(DeviceTest):
         self,
         wireless: DeviceInfo,
         initial_measurement_time: datetime | None = None,
-        initial_battery_info: FuelGaugeData | None = None
+        initial_battery_info: FuelGaugeData | None = None,
     ):
         super().__init__("battery", wireless, error_code="B")
         self._wireless = wireless
-        self._initial_timestamp = datetime.now() if initial_measurement_time is None else initial_measurement_time
-        self._initial_battery_info = self._wireless.rode_device.handle_command(
-            GetFuelGaugeCommand()
-        ) if initial_battery_info is None else initial_battery_info
+        self._initial_timestamp = (
+            datetime.now()
+            if initial_measurement_time is None
+            else initial_measurement_time
+        )
+        self._initial_battery_info = (
+            self._wireless.rode_device.handle_command(GetFuelGaugeCommand())
+            if initial_battery_info is None
+            else initial_battery_info
+        )
 
     def test_routine(self) -> list[TestInfo]:
         time_since_measurement = datetime.now() - self._initial_timestamp

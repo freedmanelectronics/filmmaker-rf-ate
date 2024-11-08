@@ -19,8 +19,8 @@ class FirmwareVersionTest(DeviceTest):
         self._min_nordic_version = min_nordic_version
 
         self._test_params = {
-            'min_firmware_version': str(self._min_firmware_version),
-            'min_nordic_version': str(self._min_nordic_version)
+            "min_firmware_version": str(self._min_firmware_version),
+            "min_nordic_version": str(self._min_nordic_version),
         }
 
     def test_routine(self) -> list[TestInfo]:

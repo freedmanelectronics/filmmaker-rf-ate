@@ -1,20 +1,15 @@
-from enum import Enum, auto
-
-from functional_test_core.device_test import TestHandler, DeviceTest
-from functional_test_core.device_test.observer import Message
+from functional_test_core.device_test import TestHandler
 from functional_test_core.mock import (
     MockDeviceTestTimerExecution,
     MockDeviceTestRaises,
     MockDeviceTestRetries,
 )
 from functional_test_core.models import DeviceInfo
-from rode.devices.wireless.bases.wireless_device_base import WirelessDeviceBase
 
 from filmmaker_rf_ate.config import Config
 from filmmaker_rf_ate.tests.battery_test import BatteryTest
 from filmmaker_rf_ate.tests.connection_stats_test import ConnectionStatsTest
 from filmmaker_rf_ate.tests.firmware_version_test import FirmwareVersionTest
-from filmmaker_rf_ate.tests.nvm_test import NvmTest
 from filmmaker_rf_ate.tests.rf_power_test import RFPowerTest
 
 
@@ -37,7 +32,9 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
     return th
 
 
-def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config, stop_on_fail:bool = True) -> TestHandler:
+def test_factory(
+    ref: DeviceInfo, dut: DeviceInfo, config: Config, stop_on_fail: bool = True
+) -> TestHandler:
     tests = [
         FirmwareVersionTest(
             dut,

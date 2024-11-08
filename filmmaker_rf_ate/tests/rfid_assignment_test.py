@@ -57,7 +57,7 @@ class RfidAssignmentTest(DeviceTest):
                 self.notify_observers(
                     self._create_message(
                         "pass",
-                        '',
+                        "",
                     ),
                 )
 

@@ -204,7 +204,6 @@ if __name__ == "__main__":
     print(devices)
 
     # print(get_devices_by_hid([CONFIG.device_classes.dut, CONFIG.device_classes.ref]))
-    from rode.devices.wireless.wireless_go_3_tx import WirelessGo3Tx
 
     hid_index = find_hid_index(CONFIG.device_classes.dut)
 

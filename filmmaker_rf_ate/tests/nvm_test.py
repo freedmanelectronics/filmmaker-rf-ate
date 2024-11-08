@@ -12,8 +12,8 @@ class NvmTest(DeviceTest):
         self._exp_nvm_values = expected_values
 
         self._test_params = {
-            'nvm_address': self._nvm_address,
-            'expected_nvm_values': self._exp_nvm_values
+            "nvm_address": self._nvm_address,
+            "expected_nvm_values": self._exp_nvm_values,
         }
 
     def test_routine(self) -> list[TestInfo]:
