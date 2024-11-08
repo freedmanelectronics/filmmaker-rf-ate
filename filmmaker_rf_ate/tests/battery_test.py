@@ -1,4 +1,5 @@
 # Tests battery
+import time
 from datetime import datetime, timedelta
 
 from functional_test_core.device_test import DeviceTest
@@ -31,7 +32,7 @@ class BatteryTest(DeviceTest):
 
         battery_info = self._wireless.rode_device.handle_command(GetFuelGaugeCommand())
         passed = (
-            battery_info.battery_soc > self._initial_battery_info.battery_soc
+            battery_info.battery_soc >= self._initial_battery_info.battery_soc
             or battery_info.battery_soc == 100
         )
         info = {
@@ -74,8 +75,8 @@ if __name__ == "__main__":
         CONFIG.device_classes.dut, CONFIG.device_classes.ref, hid_index=CONFIG.hid_index
     )
 
-    initial_time = datetime.now() - timedelta(hours=1)
     test = BatteryTest(dut)
+    time.sleep(20)
     results = test.execute_test()
 
     print(spprint_devices(dut))

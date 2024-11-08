@@ -16,7 +16,12 @@ class FirmwareVersionTest(DeviceTest):
         super().__init__("firmware_version", wireless, error_code="F")
         self._wireless = wireless
         self._min_firmware_version = min_firmware_version
-        self._min_nordic_verison = min_nordic_version
+        self._min_nordic_version = min_nordic_version
+
+        self._test_params = {
+            'min_firmware_version': str(self._min_firmware_version),
+            'min_nordic_version': str(self._min_nordic_version)
+        }
 
     def test_routine(self) -> list[TestInfo]:
         ret = []
@@ -49,8 +54,8 @@ class FirmwareVersionTest(DeviceTest):
         nordic_version = self._wireless.rode_device.handle_command(
             AppCommands.radio_version()
         )
-        passed = nordic_version.version >= self._min_nordic_verison
-        info = {"found": str(nordic_version), "minimum": str(self._min_nordic_verison)}
+        passed = nordic_version.version >= self._min_nordic_version
+        info = {"found": str(nordic_version), "minimum": str(self._min_nordic_version)}
         ret.append(TestInfo("nordic_version", passed, info=info))
 
         if passed:
@@ -64,7 +69,7 @@ class FirmwareVersionTest(DeviceTest):
             self.notify_observers(
                 self._create_message(
                     "fail",
-                    f"Nordic version failed. Found {str(nordic_version)}, expected >{str(self._min_nordic_verison)}",
+                    f"Nordic version failed. Found {str(nordic_version)}, expected >{str(self._min_nordic_version)}",
                 ),
             )
 

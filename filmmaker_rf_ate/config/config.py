@@ -35,6 +35,7 @@ class Config:
     hid_index: int = 8
     device_classes: DeviceClasses = None
     tests: TestConfig = None
+    stop_on_fail: bool = True
 
     def __post_init__(self):
         if self.gender == "rx":

@@ -51,6 +51,10 @@ class RFPowerTest(DeviceTest):
             else antennae_min_delta
         )
 
+        self._test_params = {
+            'channels': [channel.name for channel in self._channels],
+        }
+
     def pre_test_routine(self) -> None:
         self.notify_observers(
             self._create_message(

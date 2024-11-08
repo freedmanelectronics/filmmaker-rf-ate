@@ -2,6 +2,7 @@ import threading
 
 from functional_test_core.device_test.observer import Observer, Observable, Message
 from functional_test_core.models import DeviceInfo
+from functional_test_core.models.utils import spprint_devices
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ListProperty
 from kivy.uix.label import Label
@@ -45,7 +46,7 @@ class RootLayout(BoxLayout):
     ):
         super().__init__(**kwargs)
         self.ref: DeviceInfo | None = None
-        self._test_config = config
+        self._config = config
         self.duts: list[DeviceInfo | None] = [None, None, None, None]
 
     def _scan_devices(
@@ -64,8 +65,8 @@ class RootLayout(BoxLayout):
 
         try:
             ref, *duts = get_devices(
-                self._test_config.device_classes.dut,
-                self._test_config.device_classes.ref,
+                self._config.device_classes.dut,
+                self._config.device_classes.ref,
                 retries=5,
             )
         except AssertionError:
@@ -102,7 +103,7 @@ class RootLayout(BoxLayout):
 
                 observer.dut_widget = widget
 
-                test_handler = test_factory(ref, dut, self._test_config)
+                test_handler = test_factory(ref, dut, self._config, self._config.stop_on_fail)
                 test_handler.add_observer(observer)
                 results = test_handler.execute_tests()
 
@@ -119,7 +120,9 @@ class RootLayout(BoxLayout):
             else:
                 self.ids.log_label.text = "Tests passed!"
 
-        threading.Thread(target=_start_test_callback).start()
+            print(spprint_devices([dut for dut in duts if dut is not None], verbose=False))
+
+        threading.Thread(target=_start_test_callback, daemon=True).start()
 
 
 class DUTLayout(BoxLayout):

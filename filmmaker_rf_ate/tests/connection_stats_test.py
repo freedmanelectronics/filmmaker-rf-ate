@@ -29,6 +29,13 @@ class ConnectionStatsTest(DeviceTest):
         self._min_rssi = min_rssi
         self._allowed_errors = allowed_errors
 
+        self._test_params = {
+            'duration_short': self._duration_short,
+            'duration_long': self._duration_long,
+            'min_rssi': self._min_rssi,
+            'allowed_errors': self._allowed_errors
+        }
+
         if self._gender == "tx":
             self._dut_rfid_idx = 1  # Pairs to RX
             self._ref_rfid_idx = 1  # Pairs to TX1

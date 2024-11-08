@@ -37,7 +37,7 @@ def mock_test_factory(ref: DeviceInfo, dut: DeviceInfo) -> TestHandler:
     return th
 
 
-def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandler:
+def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config, stop_on_fail:bool = True) -> TestHandler:
     tests = [
         FirmwareVersionTest(
             dut,
@@ -67,7 +67,7 @@ def test_factory(ref: DeviceInfo, dut: DeviceInfo, config: Config) -> TestHandle
         BatteryTest(dut),
     ]
 
-    th = TestHandler(verbose=False, tests=tests)
+    th = TestHandler(verbose=False, tests=tests, stop_on_fail=stop_on_fail)
 
     return th
 

@@ -11,6 +11,11 @@ class NvmTest(DeviceTest):
         self._nvm_address = address
         self._exp_nvm_values = expected_values
 
+        self._test_params = {
+            'nvm_address': self._nvm_address,
+            'expected_nvm_values': self._exp_nvm_values
+        }
+
     def test_routine(self) -> list[TestInfo]:
         nvm = self._wireless.rode_device.handle_command(
             NVMReadCommand(self._nvm_address, len(self._exp_nvm_values))
