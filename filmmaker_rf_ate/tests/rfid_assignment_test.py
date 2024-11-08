@@ -26,6 +26,12 @@ class RfidAssignmentTest(DeviceTest):
         if (
             device_rfid == b"\xff\xff\xff\xff" or device_rfid[0] & 0xF0 != 0x080
         ):  # RFID has not been assigned, or is invalid
+            self.notify_observers(
+                self._create_message(
+                    "running",
+                    f'Assigning RFID of value {}',
+                ),
+            )
             rfid_from_server = self._rfid_client.next(
                 self._wireless.family.name,
                 self._wireless.family.pid,
@@ -53,6 +59,14 @@ class RfidAssignmentTest(DeviceTest):
             passed = device_rfid[0] & 0xF0 == 0x080
             info = {"device_rfid": device_rfid}
             ret = TestInfo("rfid_valid", passed, info=info)
+            if passed:
+                self.notify_observers(
+                    self._create_message(
+                        "pass",
+                        '',
+                    ),
+                )
+
         if passed:
             self.notify_observers(
                 Message(

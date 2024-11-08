@@ -52,6 +52,12 @@ class RFPowerTest(DeviceTest):
         )
 
     def pre_test_routine(self) -> None:
+        self.notify_observers(
+            self._create_message(
+                "running",
+                'Powering on devices...',
+            ),
+        )
         self._dut.rode_device.handle_command(AppCommands.set_system_state(True))
         exc = None
         for i in range(5):
